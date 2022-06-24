@@ -1,7 +1,7 @@
 ---
 name: Implementation
 about: Outline the implementation for a feature.
-title: ''
+title: "[1-5 Difficulty] Ticket title"
 labels: implementation
 assignees: ''
 
