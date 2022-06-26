@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  gopher-db:
+    container_name: gopher-db
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - ../../db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - gopherdb:/var/lib/postgresql/data
+    networks:
+      - gopher_network
+
+  gopher-dev:
+    container_name: gopher-dev
+    depends_on:
+      - gopher-db
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+    image: gopher-dev
+    volumes:
+     - ../../:/app
+    restart: always
+    ports:
+      - 3001:3000
+      - 9229:9229
+    networks:
+      - gopher_network
+
+volumes:
+  gopherdb:
+
+networks:
+  gopher_network:

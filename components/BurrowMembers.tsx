@@ -5,7 +5,7 @@ export default function BurrowMembers({members}) {
     <Paper>
       <Title order={2}>Members</Title>
       <Stack>
-        {members.map(member => <Box>{member}</Box>)}
+        {members.map(member => <Box key={member}>{member}</Box>)}
       </Stack>
     </Paper>
   )
