@@ -7,7 +7,7 @@ import {
 } from '@mantine/core';
 import { Plus } from 'tabler-icons-react';
 
-export default function TaskListAdd({ members }) {
+export default function ShoppingListAdd({ members }) {
   const handleAdd = (event) => {};
 
   return (
