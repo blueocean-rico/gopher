@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { Group, Paper, Title } from '@mantine/core';
-import BurrowMembers from '../components/BurrowMembers';
-import ShoppingList from '../components/ShoppingList.tsx';
+import BurrowMembers from '@/components/BurrowMembers';
+import ShoppingList from '@/components/ShoppingList';
 
 export default function ShoppingListPage({ tasks, members }): NextPage {
   members = ['me', 'you'];

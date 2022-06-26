@@ -1,6 +1,6 @@
 import { Paper, List, Card, Stack } from '@mantine/core';
-import ShoppingListItem from './ShoppingListItem.tsx';
-import ShoppingListAdd from './ShoppingListAdd.tsx';
+import ShoppingListItem from '@/components/ShoppingListItem';
+import ShoppingListAdd from '@/components/ShoppingListAdd';
 
 export default function ShoppingList({ tasks, members }) {
   return (
