@@ -1,6 +1,6 @@
 ---
 name: Investigation
-about: Describe this issue template's purpose here.
+about: To investigate a technology
 title: ''
 labels: tech debt/refactoring/chore
 assignees: ''

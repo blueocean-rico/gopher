@@ -1,6 +1,6 @@
 ---
 name: Implementation
-about: Outline the implementation for a feature.
+about: To create a concrete/actionable implementation ticket
 title: "[1-5 Difficulty] Ticket title"
 labels: implementation
 assignees: ''
