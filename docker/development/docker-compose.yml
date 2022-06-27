@@ -11,7 +11,7 @@ services:
       - 5433:5432
     volumes:
       - ../../db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - gopherdb:/var/lib/postgresql/data
+      #- gopherdb:/var/lib/postgresql/data
     networks:
       - gophernetwork
 
