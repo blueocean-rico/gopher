@@ -3,7 +3,7 @@ import sql from '@/db/index'
 export function getShoppingListItems(listId) {
   return sql`
     SELECT
-      li.id AS list_item_id,
+      li.id AS id,
       li.list_id AS list_id,
       li.name AS name,
       li.price AS price,
@@ -51,7 +51,14 @@ export function getShoppingListEvents(listIds) {
 }
 }
 
-export function getShoppingListMembers(listIds) {
+export async function getShoppingListMembers(listId) {
+   const result = await sql`
+    SELECT json_build_object('id', u.id, 'name', u.name)
+    FROM lists_users l_u INNER JOIN users u ON l_u.user_id = u.id
+    WHERE l_u.list_id = ${listId};
+  `;
+
+  return {list_id: listId, users: result};
 }
 
 export async function addShoppingListItem(item) {
@@ -71,8 +78,8 @@ export async function addShoppingListItem(item) {
       RETURNING *
     ),
     inserted_event AS (
-      INSERT INTO list_events (event_type, end_id)
-      SELECT 'add', id FROM inserted_item
+      INSERT INTO list_events (list_id, event_type, user_id, end_id)
+      SELECT ${item.list_id}, 'add', ${item.created_by.id}, id FROM inserted_item
       RETURNING *
     )
     SELECT
