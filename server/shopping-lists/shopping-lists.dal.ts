@@ -100,11 +100,13 @@ export async function addShoppingListItem(item) {
   return result[0];
 }
 
-export function deleteShoppingListItem(item) {
-  //add list_event
+export function deleteShoppingListItem(event) {
   return sql`
     UPDATE list_items SET active = false
-      WHERE id = ${item.id};
+      WHERE id = ${event.end.id};
+
+    INSERT INTO list_events (list_id, event_type, user_id, start_id) 
+    VALUES (${event.list_id}, 'delete', ${event.created_by.id}, ${event.end.id});
   `;
 }
 
