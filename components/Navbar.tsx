@@ -30,6 +30,7 @@ const Navbar: NextPage = () => {
         </Grid.Col>
         <Grid.Col span={2} offset={0} style={{ textAlign: "center" }}>
           <Menu control={<Button variant="default">Options</Button>}>
+            {/* We can add more into this as needed */}
             <Menu.Item component={NextLink} href="/">
               Home
             </Menu.Item>
