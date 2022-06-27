@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  gopher-db:
-    container_name: gopher-db
+  gopherdb:
+    container_name: gopherdb
     image: postgres:14
     restart: always
     environment:
@@ -13,27 +13,29 @@ services:
       - ../../db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - gopherdb:/var/lib/postgresql/data
     networks:
-      - gopher_network
+      - gophernetwork
 
-  gopher-dev:
-    container_name: gopher-dev
+  gopherdev:
+    container_name: gopherdev
     depends_on:
-      - gopher-db
+      - gopherdb
     build:
       context: ../../
       dockerfile: docker/development/Dockerfile
-    image: gopher-dev
+    image: gopherdev
     volumes:
      - ../../:/app
+     - /app/node_modules/
+     - /app/.next/
     restart: always
     ports:
       - 3001:3000
       - 9229:9229
     networks:
-      - gopher_network
+      - gophernetwork
 
 volumes:
   gopherdb:
 
 networks:
-  gopher_network:
+  gophernetwork:
