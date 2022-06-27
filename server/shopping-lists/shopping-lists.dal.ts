@@ -61,26 +61,25 @@ export async function getShoppingListMembers(listId) {
   return {list_id: listId, users: result};
 }
 
-// change to event object
-export async function addShoppingListItem(item) {
+export async function addShoppingListItem(event) {
   const result = await sql`
     WITH inserted_item AS (
       INSERT INTO list_items (list_id, name, price)
-      VALUES (${item.list_id}, ${item.name}, ${item.price})
+      VALUES (${event.end.list_id}, ${event.end.name}, ${event.end.price})
       RETURNING *
     ),
     inserted_users AS (
       INSERT INTO list_items_users (list_item_id, user_id)
       SELECT * FROM (
         (SELECT id FROM inserted_item) AS alias1 CROSS JOIN unnest(
-          ${item.users.map((user) => user.id)}::integer[]
+          ${event.end.users.map((user) => user.id)}::integer[]
         )
       ) AS alias2
       RETURNING *
     ),
     inserted_event AS (
       INSERT INTO list_events (list_id, event_type, user_id, end_id)
-      SELECT ${item.list_id}, 'add', ${item.created_by.id}, id FROM inserted_item
+      SELECT ${event.list_id}, 'add', ${event.created_by.id}, id FROM inserted_item
       RETURNING *
     )
     SELECT
