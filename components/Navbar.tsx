@@ -1,18 +1,34 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { Grid, Menu, Button, Divider } from "@mantine/core";
+import { Grid, Menu, Button, Divider, Anchor } from "@mantine/core";
+import { User, Bell } from "tabler-icons-react";
 import { NextLink } from "@mantine/next";
 
 const Navbar: NextPage = () => {
   return (
     <>
-      <Grid style={{ backgroundColor: "lightBlue", height: '4em', margin: 0 }} justify="center" align="center">
+      <Grid
+        style={{ backgroundColor: "lightBlue", height: "4em", margin: 0 }}
+        align="center"
+      >
         <Grid.Col span={3}>
           <Link href="/">
             <Button variant="default">Gopher</Button>
           </Link>
         </Grid.Col>
-        <Grid.Col span={3} offset={6} style={{ textAlign: "right" }}>
+        <Grid.Col
+          span={1}
+          offset={6}
+          style={{ textAlign: "center", marginTop: "0.4em" }}
+        >
+          <Anchor component={NextLink} href="/">
+            <User />
+          </Anchor>
+          <Anchor component={NextLink} href="/">
+            <Bell />
+          </Anchor>
+        </Grid.Col>
+        <Grid.Col span={2} offset={0} style={{ textAlign: "center" }}>
           <Menu control={<Button variant="default">Options</Button>}>
             <Menu.Item component={NextLink} href="/">
               Home
