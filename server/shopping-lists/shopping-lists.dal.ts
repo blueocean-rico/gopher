@@ -61,6 +61,7 @@ export async function getShoppingListMembers(listId) {
   return {list_id: listId, users: result};
 }
 
+// change to event object
 export async function addShoppingListItem(item) {
   const result = await sql`
     WITH inserted_item AS (
@@ -110,5 +111,28 @@ export function deleteShoppingListItem(event) {
   `;
 }
 
-export function modifyShoppingListItem(item) {
+export function modifyShoppingListItem(event) {
+  return sql`
+    WITH end_item AS (
+      INSERT INTO list_items (list_id, name, price)
+      VALUES (${event.end.list_id}, ${event.end.name}, ${event.end.price})
+      RETURNING *
+    ),
+    end_users AS (
+      INSERT INTO list_items_users (list_item_id, user_id)
+      SELECT * FROM (
+        (SELECT id FROM end_item) AS alias1 CROSS JOIN unnest(
+          ${event.end.users.map((user) => user.id)}::integer[]
+        )
+      ) AS alias2
+      RETURNING *
+    ),
+    inserted_event AS (
+      INSERT INTO list_events (list_id, event_type, user_id, start_id, end_id)
+      SELECT ${event.list_id}, 'modify', ${event.created_by.id}, ${event.start.id}, id FROM end_item
+      RETURNING *
+    )
+    UPDATE list_items SET active = false
+        WHERE id = ${event.start.id};
+  `;
 }
