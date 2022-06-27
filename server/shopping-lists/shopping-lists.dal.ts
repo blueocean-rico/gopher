@@ -18,37 +18,37 @@ export function getShoppingListItems(listId) {
 }
 
 export function getShoppingListEvents(listIds) {
-  const result = await sql`
-    SELECT json_agg(selected_events) AS events FROM (
-      SELECT es.start FROM (
-        SELECT e.event_type, e.user_id, e.end_id, e.event_date, json_build_object(
-          'list_item_id', li.id,
-          'list_id', li.list_id,
-          'name', li.name,
-          'price', li.price,
-          'users', json_agg(u1.id)
-        ) AS start
-        FROM
-          list_events e
-            LEFT JOIN users u ON e.user_id = u.id
-            LEFT JOIN list_items li1 ON e.start_id = li1.id
-            LEFT JOIN list_items_users li_u1 ON li1.id = li_u1.list_item_id
-            LEFT JOIN users u1 ON u1.id = li_u1.user_id
-        WHERE li.list_id IN (1,2)
-        --- WHERE li.list_id IN ${sql(listIds)}
-        GROUP BY li1.id
-      ) AS es 
-        LEFT JOIN list_items li2 ON es.end_id = li2.id
+  return sql`
+    SELECT e.id, e.list_id, e.event_type,
+      json_build_object('id', u.id, 'name', u.name) AS user,
+      CASE WHEN e.start_id IS NULL THEN NULL ELSE json_build_object(
+        'id', li1.id,
+        'list_id', li1.list_id,
+        'name', li1.name,
+        'price', li1.price,
+        'users', json_agg(json_build_object('id', u1.id))
+      ) END AS start,
+      CASE WHEN e.end_id IS NULL THEN NULL ELSE json_build_object(
+        'id', li2.id,
+        'list_id', li2.list_id,
+        'name', li2.name,
+        'price', li2.price,
+        'users', json_agg(json_build_object('id', u2.id))
+      ) END AS end,
+      e.event_date
+    FROM
+      list_events e
+        LEFT JOIN list_items li1 ON e.start_id = li1.id
+        LEFT JOIN list_items_users li_u1 ON li1.id = li_u1.list_item_id
+        LEFT JOIN users u1 ON u1.id = li_u1.user_id
+        LEFT JOIN list_items li2 ON e.end_id = li2.id
         LEFT JOIN list_items_users li_u2 ON li2.id = li_u2.list_item_id
         LEFT JOIN users u2 ON u2.id = li_u2.user_id
-
-  AS selected_events
-
-    GROUP BY list_id;
+        LEFT JOIN users u ON e.user_id = u.id
+    --- WHERE e.list_id IN (1,2) 
+    WHERE e.list_id IN ${sql(listIds)}
+    GROUP BY e.id, li1.id, u.id, li2.id
   `;
-
-  return result[0].events;
-}
 }
 
 export async function getShoppingListMembers(listId) {
