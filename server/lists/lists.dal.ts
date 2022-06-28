@@ -1,6 +1,7 @@
-import sql from '@/db/index'
+import sql from '@/db/index';
+import { ListItemEvent } from '@/types/index';
 
-export function getShoppingListItems(listId) {
+export function getShoppingListItems(listId: number) {
   return sql`
     SELECT
       li.id AS id,
@@ -17,7 +18,7 @@ export function getShoppingListItems(listId) {
   `;
 }
 
-export function getShoppingListEvents(listIds) {
+export function getShoppingListEvents(listIds: number[]) {
   return sql`
     SELECT e.id, e.list_id, e.event_type,
       json_build_object('id', u.id, 'name', u.name) AS user,
@@ -51,7 +52,7 @@ export function getShoppingListEvents(listIds) {
   `;
 }
 
-export async function getShoppingListMembers(listId) {
+export async function getShoppingListMembers(listId: number) {
    const result = await sql`
     SELECT json_build_object('id', u.id, 'name', u.name)
     FROM lists_users l_u INNER JOIN users u ON l_u.user_id = u.id
@@ -61,7 +62,7 @@ export async function getShoppingListMembers(listId) {
   return {list_id: listId, users: result};
 }
 
-export async function addShoppingListItem(event) {
+export async function addShoppingListItem(event: ListItemEvent) {
   const result = await sql`
     WITH inserted_item AS (
       INSERT INTO list_items (list_id, name, price)
@@ -100,7 +101,7 @@ export async function addShoppingListItem(event) {
   return result[0];
 }
 
-export function deleteShoppingListItem(event) {
+export function deleteShoppingListItem(event: ListItemEvent) {
   return sql`
     UPDATE list_items SET active = false
       WHERE id = ${event.end.id};
@@ -110,7 +111,7 @@ export function deleteShoppingListItem(event) {
   `;
 }
 
-export function modifyShoppingListItem(event) {
+export function modifyShoppingListItem(event: ListItemEvent) {
   return sql`
     WITH end_item AS (
       INSERT INTO list_items (list_id, name, price)
