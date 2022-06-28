@@ -8,8 +8,8 @@
 
 import React, { useState } from "react";
 import { GoogleMap, LoadScript, MarkerF, useJsApiLoader } from "@react-google-maps/api";
-import PlaceSearch from "./api/map";
-import { constants } from "buffer";
+// import PlaceSearch from "./api/map";
+// import { constants } from "buffer";
 
 const containerStyle = {
   width: '750px',
@@ -68,13 +68,11 @@ export async function getStaticProps() {
     lng: -122.349358,
   };
 
-  const config = {
-    method: "GET",
-    url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=1800&type=supermarket&keyword=whole&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS}`,
-  };
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=1800&type=supermarket&keyword=whole&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS}`
 
 
-  const res = await fetch(config.url, {
+
+  const res = await fetch(url, {
     method: 'GET',
     // mode: 'cors',
     headers: {
