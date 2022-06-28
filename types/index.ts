@@ -1,5 +1,7 @@
 export interface List {
   id: number;
+  name: string;
+  createdAt: Date;
   items: ListItem[];
   users: User[];
 }

@@ -1,3 +1,1 @@
-import { addUser } from '@/server/users/users.controllers';
-
-export { addUser };
+export { addUser } from '@/server/users/users.dal';
