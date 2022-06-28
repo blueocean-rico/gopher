@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { Calendar } from "@mantine/dates";
-import { Modal, Button } from "@mantine/core";
+import { Modal, Button, Tooltip } from "@mantine/core";
 import { useState } from "react";
 
 const CalendarPage: NextPage = () => {
@@ -19,7 +19,13 @@ const CalendarPage: NextPage = () => {
         <Button>Change who is free</Button>
       </Modal>
       <Calendar
-      hideOutsideDates={true}
+        renderDay={(date) => (
+          // We could use SSR to get a obj with (day): [people] then display that for whatever day you hover
+          <Tooltip style={{width: '100%'}} label="Name, Name" withArrow>
+              <div style={{width: '100%'}}>{date.toLocaleDateString("en-US").split("/")[1]}</div>
+          </Tooltip>
+        )}
+        hideOutsideDates={true}
         month={new Date()}
         value={value}
         onChange={test}
