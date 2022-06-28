@@ -1,34 +1,66 @@
 import type { NextPage } from "next";
 import { Calendar } from "@mantine/dates";
-import { Modal, Button, Tooltip } from "@mantine/core";
+import { useRouter } from "next/router";
+import {
+  Modal,
+  Button,
+  Tooltip,
+  Text,
+  Title,
+  Center,
+  Space,
+} from "@mantine/core";
 import { useState } from "react";
 
 const CalendarPage: NextPage = () => {
-  const [value, setValue] = useState(new Date());
   const [opened, setOpened] = useState(false);
-  const test = (e: Date) => {
-    setValue(e);
-    setOpened(true);
-  };
+  const [dates, setDates] = useState<Date[]>([]);
+  const router = useRouter();
 
   return (
     <>
       <Modal opened={opened} onClose={() => setOpened(false)} title="">
-        <div>People free on {value.toLocaleDateString("en-US")} [names]</div>
-        {/* Here I need to get user data from the DB */}
-        <Button>Change who is free</Button>
+        <Center>
+          <Text size="xl">Select every day you are free</Text>
+        </Center>
+        <Space h="md" />
+        <Center>
+          <Calendar
+            hideOutsideDates={true}
+            month={new Date()}
+            multiple
+            value={dates}
+            onChange={(dates) => setDates(dates)}
+            allowLevelChange={false}
+          />
+        </Center>
+        <Space h="xl" />
+        <Center>
+          <Button
+            onClick={() => console.log(dates.map((date) => date.getDate()))}
+          >
+            Submit availability
+          </Button>
+        </Center>
       </Modal>
+
+      <Title order={2} align="center">
+        List name, {router.query.listid}
+      </Title>
+      <Title order={4} align="center">
+        People on the list
+      </Title>
       <Calendar
         renderDay={(date) => (
           // We could use SSR to get a obj with (day): [people] then display that for whatever day you hover
-          <Tooltip style={{width: '100%'}} label="Name, Name" withArrow>
-              <div style={{width: '100%'}}>{date.toLocaleDateString("en-US").split("/")[1]}</div>
+          <Tooltip style={{ width: "100%" }} label="Name, Name" withArrow>
+            <Text style={{ width: "100%" }}>{date.getDate()}</Text>
           </Tooltip>
         )}
         hideOutsideDates={true}
         month={new Date()}
-        value={value}
-        onChange={test}
+        value={new Date()}
+        onChange={() => {}}
         fullWidth
         size="xl"
         allowLevelChange={false}
@@ -57,6 +89,12 @@ const CalendarPage: NextPage = () => {
           },
         })}
       />
+      <Space h="xl" />
+      <Space h="xl" />
+      <Center>
+        <Button onClick={() => setOpened(true)}>Fill out availability</Button>
+      </Center>
+      <Space h="xl" />
     </>
   );
 };
