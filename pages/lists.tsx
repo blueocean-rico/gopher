@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { Group, Paper, Title } from '@mantine/core';
-import BurrowMembers from '@/components/BurrowMembers';
+import ListMembers from '@/components/ListMembers';
 import ShoppingList from '@/components/ShoppingList';
 
 export default function ShoppingListPage({ tasks, members }): NextPage {
@@ -19,7 +19,7 @@ export default function ShoppingListPage({ tasks, members }): NextPage {
       <Title order={1}>Your Items</Title>
       <Group align="flex-start">
         <ShoppingList tasks={tasks} members={members} />
-        <BurrowMembers members={members} />
+        <ListMembers members={members} />
       </Group>
     </Paper>
   );
