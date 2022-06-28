@@ -2,6 +2,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import {UserProvider} from '@auth0/nextjs-auth0';
 import { MantineProvider } from '@mantine/core';
+import Navbar from '@/components/Navbar';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -22,6 +23,7 @@ export default function App(props: AppProps) {
           colorScheme: 'light',
         }}
       >
+        <Navbar />
         <Component {...pageProps} />
       </MantineProvider>
       </UserProvider>
