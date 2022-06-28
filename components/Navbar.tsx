@@ -40,6 +40,9 @@ const Navbar: NextPage = () => {
             <Menu.Item component={NextLink} href="/shoppinglist">
               List
             </Menu.Item>
+            <Menu.Item component={NextLink} href='/api/auth/logout'>
+              Sign out
+            </Menu.Item>
           </Menu>
         </Grid.Col>
       </Grid>
