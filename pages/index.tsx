@@ -1,12 +1,11 @@
 import {useUser} from '@auth0/nextjs-auth0';
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from 'next/link'
-import { Container, Title, Button, Grid, Text } from "@mantine/core";
+import { Title, Button, Grid, Text } from "@mantine/core";
 
-const Home = () => {
+const Home: NextPage = () => {
   const {user, error, isLoading} = useUser();
   if (isLoading) {
     return (
@@ -43,7 +42,7 @@ const Home = () => {
     )
   }
   return (
-    <Container>
+    <div>
       <Title>Welcome {user?.given_name}!</Title>
       <Grid>
         <Grid.Col span={3}>
@@ -74,7 +73,8 @@ const Home = () => {
           </Link>
         </Grid.Col>
       </Grid>
-    </Container>
+    </div>
   )
 };
+
 export default Home;

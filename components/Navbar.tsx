@@ -21,7 +21,7 @@ const Navbar: NextPage = () => {
           offset={6}
           style={{ textAlign: "center", marginTop: "0.4em" }}
         >
-          <Anchor component={NextLink} href="/">
+          <Anchor component={NextLink} href="/profile">
             <User />
           </Anchor>
           <Anchor component={NextLink} href="/">
