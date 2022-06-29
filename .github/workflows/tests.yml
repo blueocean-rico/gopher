@@ -20,11 +20,9 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm ci
-    - name: Start containers
-      run: docker-compose -f "./docker/development/docker-compose.yml" up -d --build
+    - name: Start database
+      run: docker-compose -f "./docker/ci/docker-compose.yml" up -d --build
     - name: Test
       run: npm run test:ci
-    - name: test
-      run: docker compose exec gopherdev npm test:ci
-    - name: Stop containers
-      run: docker-compose -f "./docker/development/docker-compose.yml" down
+    - name: Stop database
+      run: docker-compose -f "./docker/ci/docker-compose.yml" down
