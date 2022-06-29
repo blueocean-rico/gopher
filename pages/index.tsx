@@ -62,6 +62,9 @@ const Home: NextPage = () => {
           <Link href='/lists' passHref>
             <Button>See your lists</Button>
           </Link>
+          <Link href='/newListForm' passHref>
+            <Button>create new list</Button>
+          </Link>
         </Grid.Col>
         <Grid.Col span={6}>
           <Title order={3}>Whats new</Title>
