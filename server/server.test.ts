@@ -9,13 +9,21 @@ import {
   addShoppingListMembers,
   getShoppingListMembers,
   deleteShoppingListMembers,
+  addShoppingListItem,
+  getShoppingListItems,
+  deleteShoppingListItem,
+  modifyShoppingListItem,
 } from '@/server/lists/index';
 
 const sql = postgres('postgres://postgres:postgres@localhost:5433/gopher');
 
 afterEach(async () => {
-  await sql`DELETE FROM users`;
+  await sql`DELETE FROM list_events`;
   await sql`DELETE FROM lists`;
+  await sql`DELETE FROM lists_users`;
+  await sql`DELETE FROM list_items`;
+  await sql`DELETE FROM list_items_users`;
+  await sql`DELETE FROM users`;
 });
 
 afterAll(async () => {
@@ -129,7 +137,7 @@ describe('server', () => {
       await addUser(user2);
 
       results = await sql`SELECT * FROM users`;
-      const [addedUser1, addedUser2] = (results as any) as Types.User[];
+      const [addedUser1, addedUser2] = results as any as Types.User[];
 
       await addShoppingListMembers(listId, [addedUser1, addedUser2]);
       const members = await getShoppingListMembers(listId);
@@ -160,7 +168,7 @@ describe('server', () => {
       await addUser(user2);
 
       results = await sql`SELECT * FROM users`;
-      const [addedUser1, addedUser2] = (results as any) as Types.User[];
+      const [addedUser1, addedUser2] = results as any as Types.User[];
 
       await addShoppingListMembers(listId, [addedUser1, addedUser2]);
       await deleteShoppingListMembers(listId, [addedUser1]);
@@ -171,7 +179,194 @@ describe('server', () => {
     });
   });
 
-  describe('listitems', () => {});
+  describe('listitems', () => {
+    it('should add a shopping list item', async () => {
+      const list = { name: 'testlist' };
+      await addShoppingList(list);
+
+      let results = await sql`SELECT * FROM lists`;
+      const listId = results[0].id as number;
+
+      const user = {
+        nickname: 'test',
+        email: 'test@email.com',
+        picture: 'https://picture.com',
+      };
+      await addUser(user);
+
+      results = await sql`SELECT * FROM users`;
+      const addedUser = results[0] as Types.User;
+
+      await addShoppingListMembers(listId, [addedUser]);
+
+      const listItem = {
+        list_id: listId,
+        name: 'test list item',
+        price: 100,
+        users: [addedUser],
+      };
+
+      await addShoppingListItem({
+        list_id: listId,
+        created_by: addedUser,
+        event_type: 'add',
+        start: null,
+        end: { ...listItem, id: 1, active: true },
+      });
+      const itemResult =
+        (await sql`SELECT * FROM list_items`) as any as Types.ListItem[];
+      const itemUserResult = (await sql`SELECT * FROM list_items_users`) as any;
+
+      expect(itemResult).toHaveLength(1);
+      expect(itemResult[0].list_id).toEqual(listItem.list_id);
+      expect(itemResult[0].name).toEqual(listItem.name);
+      expect(Number(itemResult[0].price)).toEqual(listItem.price);
+      expect(itemUserResult).toHaveLength(1);
+      expect(itemUserResult[0].user_id).toEqual(addedUser.id);
+    });
+
+    it('should get shopping list items', async () => {
+      const list = { name: 'testlist' };
+      await addShoppingList(list);
+
+      let results = await sql`SELECT * FROM lists`;
+      const listId = results[0].id as number;
+
+      const user = {
+        nickname: 'test',
+        email: 'test@email.com',
+        picture: 'https://picture.com',
+      };
+      await addUser(user);
+
+      results = await sql`SELECT * FROM users`;
+      const addedUser = results[0] as Types.User;
+
+      await addShoppingListMembers(listId, [addedUser]);
+
+      const listItem = {
+        list_id: listId,
+        name: 'test list item',
+        price: 100,
+        users: [addedUser],
+      };
+
+      await addShoppingListItem({
+        list_id: listId,
+        created_by: addedUser,
+        event_type: 'add',
+        start: null,
+        end: { ...listItem, id: 1, active: true },
+      });
+      
+      const listItems = await getShoppingListItems(listId);
+      expect(listItems[0].list_id).toEqual(listItem.list_id);
+      expect(listItems[0].name).toEqual(listItem.name);
+      expect(listItems[0].price).toEqual(listItem.price);
+      expect(listItems[0].users).toEqual([addedUser]);
+    });
+
+    it('should delete a shopping list item', async () => {
+      const list = { name: 'testlist' };
+      await addShoppingList(list);
+
+      let results = await sql`SELECT * FROM lists`;
+      const listId = results[0].id as number;
+
+      const user = {
+        nickname: 'test',
+        email: 'test@email.com',
+        picture: 'https://picture.com',
+      };
+      await addUser(user);
+
+      results = await sql`SELECT * FROM users`;
+      const addedUser = results[0] as Types.User;
+
+      await addShoppingListMembers(listId, [addedUser]);
+
+      const listItem = {
+        list_id: listId,
+        name: 'test list item',
+        price: 100,
+        users: [addedUser],
+      };
+
+      await addShoppingListItem({
+        list_id: listId,
+        created_by: addedUser,
+        event_type: 'add',
+        start: null,
+        end: { ...listItem, id: 1, active: true },
+      });
+
+      let listItems = await getShoppingListItems(listId);
+
+      await deleteShoppingListItem({
+        id: 0,
+        list_id: listId,
+        created_by: addedUser,
+        event_type: 'delete',
+        end: null,
+        start: listItems[0] as Types.ListItem,
+      });
+      
+      listItems = await getShoppingListItems(listId);
+      expect(listItems).toHaveLength(0);
+    });
+
+    it('should modify a shopping list item', async () => {
+      const list = { name: 'testlist' };
+      await addShoppingList(list);
+
+      let results = await sql`SELECT * FROM lists`;
+      const listId = results[0].id as number;
+
+      const user = {
+        nickname: 'test',
+        email: 'test@email.com',
+        picture: 'https://picture.com',
+      };
+      await addUser(user);
+
+      results = await sql`SELECT * FROM users`;
+      const addedUser = results[0] as Types.User;
+
+      await addShoppingListMembers(listId, [addedUser]);
+
+      const listItem = {
+        list_id: listId,
+        name: 'test list item',
+        price: 100,
+        users: [addedUser],
+      };
+
+      await addShoppingListItem({
+        list_id: listId,
+        created_by: addedUser,
+        event_type: 'add',
+        start: null,
+        end: { ...listItem, id: 1, active: true },
+      });
+      
+      let listItems = await getShoppingListItems(listId);
+      await modifyShoppingListItem({
+        id: 1,
+        list_id: listId,
+        created_by: addedUser,
+        event_type: 'modify',
+        start: listItems[0],
+        end: {...listItems[0], name: 'new name', price: 200},
+      })
+      listItems = await getShoppingListItems(listId);
+
+      expect(listItems).toHaveLength(1);
+      expect(listItems[0].list_id).toEqual(listItem.list_id);
+      expect(listItems[0].name).toEqual('new name');
+      expect(listItems[0].price).toEqual(200);
+      expect(listItems[0].users).toEqual([addedUser]);
+    });
+  });
 
   describe('listevents', () => {});
 });
