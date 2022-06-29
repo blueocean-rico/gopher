@@ -1,5 +1,5 @@
 import sql from '@/db/index';
-import { User } from '@/types/index';
+import type { User } from '@/types/index';
 
 export function addUser (user: Omit<User, 'id'>) {
   return sql`

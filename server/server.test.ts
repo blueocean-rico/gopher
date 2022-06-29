@@ -1,4 +1,4 @@
-import * as Types from '@/types/index';
+import type * as Types from '@/types/index';
 import sql from '@/db/index';
 import { addUser } from '@/server/users/index';
 import {
