@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { NextPage, GetServerSideProps } from "next";
 import { Calendar } from "@mantine/dates";
 import { useRouter } from "next/router";
 import {
@@ -16,6 +16,7 @@ const CalendarPage: NextPage = () => {
   const [opened, setOpened] = useState(false);
   const [dates, setDates] = useState<Date[]>([]);
   const router = useRouter();
+  console.log(router.query);
 
   return (
     <>
@@ -97,6 +98,15 @@ const CalendarPage: NextPage = () => {
       <Space h="xl" />
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log(context.query)
+  // Query the calander table where list_id = context.listid
+  // Return a array of the days + user for the current month (new Date())
+  return {
+    props: {},
+  };
 };
 
 export default CalendarPage;
