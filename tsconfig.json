@@ -17,6 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@/components/*": ["components/*"],
+      "@/server/*": ["server/*"],
+      "@/types/*": ["types/*"],
       "@/db/*": ["db/*"]
     }
   },
