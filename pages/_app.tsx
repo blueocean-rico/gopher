@@ -27,7 +27,7 @@ export default function App(props: AppProps) {
         position: "relative",
         minHeight: "100vh"
       }}>
-        <div style={{paddingBottom: "400px"}}>
+        <div style={{paddingBottom: "280px"}}>
           <Navbar />
           <Component {...pageProps} />
         </div>
