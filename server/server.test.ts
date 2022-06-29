@@ -13,6 +13,7 @@ import {
   getShoppingListItems,
   deleteShoppingListItem,
   modifyShoppingListItem,
+  getShoppingListEvents,
 } from '@/server/lists/index';
 
 afterEach(async () => {
@@ -301,7 +302,6 @@ describe('server', () => {
       let listItems = await getShoppingListItems(listId);
 
       await deleteShoppingListItem({
-        id: 0,
         listId,
         createdBy: addedUser,
         eventType: 'delete',
@@ -349,7 +349,6 @@ describe('server', () => {
       
       let listItems = await getShoppingListItems(listId);
       await modifyShoppingListItem({
-        id: 1,
         listId,
         createdBy: addedUser,
         eventType: 'modify',
@@ -366,5 +365,75 @@ describe('server', () => {
     });
   });
 
-  describe('listevents', () => {});
+  describe('listevents', () => {
+    it('should get a shopping list events', async () => { 
+      const list = { name: 'testlist' };
+      await addShoppingList(list);
+
+      let results = await sql`SELECT * FROM lists`;
+      const listId = results[0].id as number;
+
+      const user1 = {
+        nickname: 'test1',
+        email: 'test1@email.com',
+        picture: 'https://picture1.com',
+      };
+      const user2 = {
+        nickname: 'test2',
+        email: 'test2@email.com',
+        picture: 'https://picture2.com',
+      };
+      await addUser(user1);
+      await addUser(user2);
+
+      results = await sql`SELECT * FROM users`;
+      const [addedUser1, addedUser2] = (results as any) as Types.User[];
+
+      await addShoppingListMembers(listId, [addedUser1, addedUser2]);
+
+      const listItem1 = {
+        listId,
+        name: 'test list item',
+        price: 100,
+        users: [addedUser1],
+      };
+
+      await addShoppingListItem({
+        listId,
+        createdBy: addedUser2,
+        eventType: 'add',
+        start: null,
+        end: { ...listItem1, id: 1 },
+      });
+      
+      let listItems = await getShoppingListItems(listId);
+      await modifyShoppingListItem({
+        listId,
+        createdBy: addedUser1,
+        eventType: 'modify',
+        start: listItems[0],
+        end: {...listItems[0], name: 'new name', price: 200},
+      })
+
+      listItems = await getShoppingListItems(listId);
+      await deleteShoppingListItem({
+        listId,
+        createdBy: addedUser2,
+        eventType: 'delete',
+        start: listItems[0],
+        end: null,
+      })
+
+      const listEvents = await getShoppingListEvents([listId]);
+      expect(listEvents).toHaveLength(3);
+      expect(listEvents[0].eventType).toEqual('delete');
+      expect(listEvents[1].eventType).toEqual('modify');
+      expect(listEvents[2].eventType).toEqual('add');
+    });
+  });
+
+  describe('get list', () => {
+    it('should get a list', () => {
+    });
+  });
 });

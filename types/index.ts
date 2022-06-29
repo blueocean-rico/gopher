@@ -18,6 +18,7 @@ export interface ListItem {
 interface BasicListEvent {
   id: number;
   listId: number;
+  date: string;
   createdBy: User;
 }
 
