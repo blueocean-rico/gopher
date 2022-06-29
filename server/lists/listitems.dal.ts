@@ -36,7 +36,7 @@ export async function addShoppingListItem(event: Omit<AddListItemEvent, 'id'>) {
   const result = await sql`
     WITH inserted_item AS (
       INSERT INTO list_items (list_id, name, price)
-      VALUES (${event.end.list_id}, ${event.end.name}, ${event.end.price})
+      VALUES (${event.end.listId}, ${event.end.name}, ${event.end.price})
       RETURNING *
     ),
     inserted_users AS (
@@ -50,8 +50,8 @@ export async function addShoppingListItem(event: Omit<AddListItemEvent, 'id'>) {
     ),
     inserted_event AS (
       INSERT INTO list_events (list_id, event_type, user_id, end_id)
-      SELECT ${event.list_id}, 'add', ${
-    event.created_by.id
+      SELECT ${event.listId}, 'add', ${
+    event.createdBy.id
   }, id FROM inserted_item
       RETURNING *
     )
@@ -78,7 +78,7 @@ export function deleteShoppingListItem(event: DeleteListItemEvent) {
     WITH updated_item AS (UPDATE list_items SET active = false
       WHERE id = ${event.start.id})
     INSERT INTO list_events (list_id, event_type, user_id, start_id) 
-    VALUES (${event.list_id}, 'delete', ${event.created_by.id}, ${
+    VALUES (${event.listId}, 'delete', ${event.createdBy.id}, ${
     event.start.id
   });
   `;
@@ -88,7 +88,7 @@ export function modifyShoppingListItem(event: ModifyListItemEvent) {
   return sql`
     WITH end_item AS (
       INSERT INTO list_items (list_id, name, price)
-      VALUES (${event.end.list_id}, ${event.end.name}, ${event.end.price})
+      VALUES (${event.end.listId}, ${event.end.name}, ${event.end.price})
       RETURNING *
     ),
     end_users AS (
@@ -102,7 +102,7 @@ export function modifyShoppingListItem(event: ModifyListItemEvent) {
     ),
     inserted_event AS (
       INSERT INTO list_events (list_id, event_type, user_id, start_id, end_id)
-      SELECT ${event.list_id}, 'modify', ${event.created_by.id}, ${
+      SELECT ${event.listId}, 'modify', ${event.createdBy.id}, ${
     event.start.id
   }, id FROM end_item
       RETURNING *

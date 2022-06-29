@@ -1,5 +1,5 @@
-import postgres from 'postgres';
 import * as Types from '@/types/index';
+import sql from '@/db/index';
 import { addUser } from '@/server/users/index';
 import {
   addShoppingList,
@@ -14,8 +14,6 @@ import {
   deleteShoppingListItem,
   modifyShoppingListItem,
 } from '@/server/lists/index';
-
-const sql = postgres('postgres://postgres:postgres@localhost:5433/gopher');
 
 afterEach(async () => {
   await sql`DELETE FROM list_events`;
@@ -111,8 +109,8 @@ describe('server', () => {
       await addShoppingListMembers(listId, [addedUser]);
       results = await sql`SELECT * FROM lists_users`;
 
-      expect(results[0].list_id).toEqual(listId);
-      expect(results[0].list_id).toEqual(listId);
+      expect(results[0].listId).toEqual(listId);
+      expect(results[0].listId).toEqual(listId);
     });
 
     it('should get shopping list members', async () => {
@@ -200,16 +198,16 @@ describe('server', () => {
       await addShoppingListMembers(listId, [addedUser]);
 
       const listItem = {
-        list_id: listId,
+        listId,
         name: 'test list item',
         price: 100,
         users: [addedUser],
       };
 
       await addShoppingListItem({
-        list_id: listId,
-        created_by: addedUser,
-        event_type: 'add',
+        listId,
+        createdBy: addedUser,
+        eventType: 'add',
         start: null,
         end: { ...listItem, id: 1, active: true },
       });
@@ -218,11 +216,11 @@ describe('server', () => {
       const itemUserResult = (await sql`SELECT * FROM list_items_users`) as any;
 
       expect(itemResult).toHaveLength(1);
-      expect(itemResult[0].list_id).toEqual(listItem.list_id);
+      expect(itemResult[0].listId).toEqual(listItem.listId);
       expect(itemResult[0].name).toEqual(listItem.name);
       expect(Number(itemResult[0].price)).toEqual(listItem.price);
       expect(itemUserResult).toHaveLength(1);
-      expect(itemUserResult[0].user_id).toEqual(addedUser.id);
+      expect(itemUserResult[0].userId).toEqual(addedUser.id);
     });
 
     it('should get shopping list items', async () => {
@@ -245,22 +243,22 @@ describe('server', () => {
       await addShoppingListMembers(listId, [addedUser]);
 
       const listItem = {
-        list_id: listId,
+        listId: listId,
         name: 'test list item',
         price: 100,
         users: [addedUser],
       };
 
       await addShoppingListItem({
-        list_id: listId,
-        created_by: addedUser,
-        event_type: 'add',
+        listId,
+        createdBy: addedUser,
+        eventType: 'add',
         start: null,
         end: { ...listItem, id: 1, active: true },
       });
       
       const listItems = await getShoppingListItems(listId);
-      expect(listItems[0].list_id).toEqual(listItem.list_id);
+      expect(listItems[0].listId).toEqual(listItem.listId);
       expect(listItems[0].name).toEqual(listItem.name);
       expect(listItems[0].price).toEqual(listItem.price);
       expect(listItems[0].users).toEqual([addedUser]);
@@ -286,16 +284,16 @@ describe('server', () => {
       await addShoppingListMembers(listId, [addedUser]);
 
       const listItem = {
-        list_id: listId,
+        listId,
         name: 'test list item',
         price: 100,
         users: [addedUser],
       };
 
       await addShoppingListItem({
-        list_id: listId,
-        created_by: addedUser,
-        event_type: 'add',
+        listId,
+        createdBy: addedUser,
+        eventType: 'add',
         start: null,
         end: { ...listItem, id: 1, active: true },
       });
@@ -304,9 +302,9 @@ describe('server', () => {
 
       await deleteShoppingListItem({
         id: 0,
-        list_id: listId,
-        created_by: addedUser,
-        event_type: 'delete',
+        listId,
+        createdBy: addedUser,
+        eventType: 'delete',
         end: null,
         start: listItems[0] as Types.ListItem,
       });
@@ -335,16 +333,16 @@ describe('server', () => {
       await addShoppingListMembers(listId, [addedUser]);
 
       const listItem = {
-        list_id: listId,
+        listId,
         name: 'test list item',
         price: 100,
         users: [addedUser],
       };
 
       await addShoppingListItem({
-        list_id: listId,
-        created_by: addedUser,
-        event_type: 'add',
+        listId,
+        createdBy: addedUser,
+        eventType: 'add',
         start: null,
         end: { ...listItem, id: 1, active: true },
       });
@@ -352,16 +350,16 @@ describe('server', () => {
       let listItems = await getShoppingListItems(listId);
       await modifyShoppingListItem({
         id: 1,
-        list_id: listId,
-        created_by: addedUser,
-        event_type: 'modify',
+        listId,
+        createdBy: addedUser,
+        eventType: 'modify',
         start: listItems[0],
         end: {...listItems[0], name: 'new name', price: 200},
       })
       listItems = await getShoppingListItems(listId);
 
       expect(listItems).toHaveLength(1);
-      expect(listItems[0].list_id).toEqual(listItem.list_id);
+      expect(listItems[0].listId).toEqual(listItem.listId);
       expect(listItems[0].name).toEqual('new name');
       expect(listItems[0].price).toEqual(200);
       expect(listItems[0].users).toEqual([addedUser]);
