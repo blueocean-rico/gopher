@@ -18,8 +18,7 @@ export function addShoppingList(list: { name: string }, users: User[]) {
         (SELECT id FROM inserted_list) AS alias1 CROSS JOIN unnest(
           ${users.map((user) => user.id)}::integer[]
         )
-      ) AS alias2
-
+      ) AS alias2;
   `;
 }
 

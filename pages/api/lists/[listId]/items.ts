@@ -8,7 +8,7 @@ import {
   addShoppingListItem,
   modifyShoppingListItem,
   deleteShoppingListItem,
-} from '@/server/lists/listitems.dal';
+} from '@/server/lists/index';
 
 export default async function handler(
   req: NextApiRequest,

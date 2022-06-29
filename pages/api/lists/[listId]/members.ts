@@ -3,7 +3,7 @@ import type { User } from '@/types/index';
 import {
   addShoppingListMembers,
   deleteShoppingListMembers,
-} from '@/server/lists/listmembers.dal';
+} from '@/server/lists/index';
 
 export default async function handler(
   req: NextApiRequest,
