@@ -14,7 +14,7 @@ run command:: node -e "console.log(crypto.randomBytes(32).toString('hex'))" ::to
 
 ### google maps api:
 go to https://developers.google.com/maps
-log in > create new project > create credentials
+log in > create new project
 enable both Maps JavaScript API, and Places API
 credentials > create credentials
 add to env NEX_PUBLIC_GOOGLE_MAPS='YOUR API KEY'
