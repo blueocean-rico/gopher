@@ -23,9 +23,16 @@ export default function App(props: AppProps) {
           colorScheme: 'light',
         }}
       >
-        <Navbar />
-        <Component {...pageProps} />
+      <div style={{
+        position: "relative",
+        minHeight: "100vh"
+      }}>
+        <div style={{paddingBottom: "400px"}}>
+          <Navbar />
+          <Component {...pageProps} />
+        </div>
         <Footer />
+      </div>
       </MantineProvider>
       </UserProvider>
     </>
