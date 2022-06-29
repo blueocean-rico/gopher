@@ -39,6 +39,7 @@ const CalendarPage: NextPage = () => {
         <Center>
           <Button
             onClick={() => console.log(dates.map((date) => date.getDate()))}
+            // This will need to make a req to a api route to add in the data to db
           >
             Submit availability
           </Button>
@@ -46,7 +47,7 @@ const CalendarPage: NextPage = () => {
       </Modal>
 
       <Title order={2} align="center">
-        List name, {router.query.listid}
+        List name, {router.query.name}
       </Title>
       <Title order={4} align="center">
         People on the list
@@ -54,7 +55,7 @@ const CalendarPage: NextPage = () => {
       <Calendar
         renderDay={(date) => (
           // We could use SSR to get a obj with (day): [people] then display that for whatever day you hover
-          <Tooltip style={{ width: "100%" }} label="Name, Name" withArrow>
+          <Tooltip style={{ width: "100%" }} label="Name, Name are free" withArrow>
             <Text style={{ width: "100%" }}>{date.getDate()}</Text>
           </Tooltip>
         )}
@@ -102,10 +103,13 @@ const CalendarPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log(context.query)
-  // Query the calander table where list_id = context.listid
+  // For each user in the current list,
+  // Query the calander table where user_id = current user
   // Return a array of the days + user for the current month (new Date())
+  // add them all together and send that as props
   return {
     props: {},
+    // {day: [users free], day: [users free]}
   };
 };
 

@@ -37,11 +37,14 @@ const Navbar: NextPage = () => {
             <Menu.Item component={NextLink} href="/households">
               House Holds
             </Menu.Item>
-            <Menu.Item component={NextLink} href="/shoppinglist">
+            <Menu.Item component={NextLink} href="/lists">
               List
             </Menu.Item>
             <Menu.Item component={NextLink} href='/api/auth/logout'>
               Sign out
+            </Menu.Item>
+            <Menu.Item component={NextLink} href='/calendar/test?name=test'>
+              Calendar
             </Menu.Item>
           </Menu>
         </Grid.Col>
