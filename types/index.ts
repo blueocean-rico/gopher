@@ -4,6 +4,7 @@ export interface List {
   createdAt: Date;
   //items: ListItem[];
   //users: User[];
+  //location: String;
 }
 
 export interface ListItem {
