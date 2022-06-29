@@ -7,7 +7,15 @@
 // // }
 
 import React, { useState } from "react";
-import { GoogleMap, LoadScript, MarkerF, useJsApiLoader } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  MarkerF,
+  useJsApiLoader,
+  InfoWindowF,
+  DirectionsRenderer } from "@react-google-maps/api";
+
+  import { Button } from '@mantine/core';
 
 
 const containerStyle = {
@@ -24,12 +32,21 @@ const center = {
 const google_maps_api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS ?? '';
 
 function HomePage({ stores }) {
-  // const [places, setPlaces] = useState(PlaceSearch({ center }));
+
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: google_maps_api_key,
   })
+
+  const handleMarkerClick = (index) => {
+    console.log('im clicked')
+    console.log(index);
+    console.log(stores[index])
+    setSelectedMarker(index);
+
+  }
 
   if (!isLoaded) {
     return <div>Loading...</div>
@@ -41,7 +58,7 @@ function HomePage({ stores }) {
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={13}
+          zoom={14}
           options={{
             zoomControl: true,
             streetViewControl: false,
@@ -49,9 +66,43 @@ function HomePage({ stores }) {
             fullscreenControl: false
           }}
         >
-          <MarkerF position={center} icon={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'} title='Home'/>
+          <MarkerF
+            position={center}
+            icon={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
+            onClick={() => setSelectedMarker('current location')}
+          >
+            {selectedMarker === 'current location' ? (
+                <InfoWindowF
+                  onCloseClick={() => {
+                    setSelectedMarker(null);
+                  }}
+                >
+                  <div>Current Location</div>
+                </InfoWindowF>
+              ) : null}
+          {/* I could add some logic here for popping up the info d */}
+          </MarkerF>
           {stores.map((store, index) => (
-            <MarkerF position={store.geometry.location} key={index} />
+            <MarkerF
+              position={store.geometry.location}
+              key={index}
+              onClick={() => handleMarkerClick(index)}
+            >
+              {selectedMarker === index ? (
+                <InfoWindowF
+                  onCloseClick={() => {
+                    setSelectedMarker(null);
+                  }}
+                >
+                  <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1rem'}}>
+                    {store.name}
+                    <Button size='xs' compact>
+                      Route Here
+                    </Button>
+                  </div>
+                </InfoWindowF>
+              ) : null}
+            </MarkerF>
           ))}
         </GoogleMap>
       </div>
@@ -64,7 +115,7 @@ function HomePage({ stores }) {
 export async function getStaticProps() {
 
 
-  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=1800&type=supermarket&keyword=grocery&key=${google_maps_api_key}`
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=500&type=store&keyword=grocery&key=${google_maps_api_key}`
 
   const res = await fetch(url, {
     method: 'GET',
