@@ -1,7 +1,8 @@
 import sql from '@/db/index';
+import { ListItemEvent } from '@/types/index';
 
 export function getShoppingListEvents(listIds: number[]) {
-  return sql`
+  return sql<ListItemEvent[]>`
     SELECT e.id, e.list_id, e.event_type,
       json_build_object('id', u.id, 'email', u.email,
         'nickname', u.nickname, 'picture', u.picture) AS createdBy,

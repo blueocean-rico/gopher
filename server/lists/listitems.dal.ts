@@ -7,7 +7,7 @@ import {
 } from '@/types/index';
 
 export async function getShoppingListItems(listId: number) {
-  const results = (await sql`
+  const results = await sql<ListItem[]>`
     SELECT
       li.id AS id,
       li.list_id AS list_id,
@@ -23,7 +23,7 @@ export async function getShoppingListItems(listId: number) {
         LEFT JOIN users u ON u.id = li_u.user_id
     WHERE li.active = true AND li_u.active = true AND li.list_id = ${listId}
     GROUP BY li.id;
-  ` as any) as ListItem[];
+  `;
 
   results.forEach((listItem: any) => {
     listItem.price = Number(listItem.price);

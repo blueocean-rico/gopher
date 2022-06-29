@@ -2,8 +2,8 @@ export interface List {
   id: number;
   name: string;
   createdAt: Date;
-  items: ListItem[];
-  users: User[];
+  //items: ListItem[];
+  //users: User[];
 }
 
 export interface ListItem {

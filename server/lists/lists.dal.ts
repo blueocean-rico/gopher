@@ -1,10 +1,11 @@
 import sql from '@/db/index';
 import { List } from '@/types/index';
 
-export async function getShoppingLists(userId: number | undefined) {
-  const lists = await sql`
+export async function getShoppingLists(userId?: number) {
+  const lists = await sql<List[]>`
     SELECT * FROM lists;
   `;
+  return lists;
 }
 
 export function addShoppingList(list: { name: string }) {

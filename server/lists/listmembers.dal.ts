@@ -2,11 +2,11 @@ import sql from '@/db/index';
 import { User } from '@/types/index';
 
 export async function getShoppingListMembers(listId: number) {
-  const result = (await sql`
+  const result = await sql<User[]>`
     SELECT u.*
     FROM lists_users l_u INNER JOIN users u ON l_u.user_id = u.id
     WHERE l_u.list_id = ${listId};
-  `) as any as User[];
+  `;
 
   return { list_id: listId, users: result };
 }
