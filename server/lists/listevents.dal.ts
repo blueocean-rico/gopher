@@ -1,5 +1,5 @@
 import sql from '@/db/index';
-import { ListItemEvent } from '@/types/index';
+import type { ListItemEvent } from '@/types/index';
 
 export function getShoppingListEvents(listIds: number[]) {
   return sql<ListItemEvent[]>`

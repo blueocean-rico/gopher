@@ -1,5 +1,5 @@
 import sql from '@/db/index';
-import {
+import type {
   ListItem,
   AddListItemEvent,
   DeleteListItemEvent,
