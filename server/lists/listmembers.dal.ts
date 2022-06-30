@@ -1,5 +1,5 @@
-import sql from "@/db/index";
-import type { Member, User } from "@/types/index";
+import sql from '@/db/index';
+import type { Member, User } from '@/types/index';
 
 export async function getListMembers(listId: number) {
   const result = await sql<Member[]>`

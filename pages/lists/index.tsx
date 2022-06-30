@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import type { GetServerSideProps } from 'next';
 import type { List, User, ListItemEvent } from '@/types/index';
-import { } from '@/components/index';
+import NewListForm from '@/components/NewListForm';
 import { getLists, getListItemEvents } from '@/server/lists/index';
 import { getUsers } from '@/server/users/index';
 
@@ -15,6 +15,7 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
   console.log('lists', lists, 'users', users, 'events', events);
   return (
     <>
+      <NewListForm />
     </>
   );
 }
