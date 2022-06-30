@@ -1,11 +1,10 @@
 import type { NextPage } from 'next';
 import type { GetServerSideProps } from 'next';
 import type { List, User, ListItemEvent } from '@/types/index';
-import { } from '@/components/index';
+import NewListForm from '@/components/NewListForm';
 import { getLists, getListItemEvents } from '@/server/lists/index';
 import { getUsers } from '@/server/users/index';
 import ListCard from '@/components/ListCard';
-import { Grid } from '@mantine/core';
 
 interface Props {
   lists: List[];
@@ -23,6 +22,7 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
           <ListCard/>
         ))}
       </Grid>
+      <NewListForm />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { User } from '@/types/index';
+import type { User, Member } from '@/types/index';
 import { addListMembers, deleteListMembers } from '@/server/lists/index';
 
 export default async function handler(
@@ -18,7 +18,7 @@ export default async function handler(
     }
   } else if (req.method === 'DELETE') {
     const listId = Number(req.query.listId);
-    const { users } = <{ listId: number; users: User[] }>req.body;
+    const { users } = <{ listId: number; users: Member[] }>req.body;
     try {
       await deleteListMembers(listId, users);
       res.status(204).send(undefined);

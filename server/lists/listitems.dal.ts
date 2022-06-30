@@ -1,9 +1,9 @@
 import sql from '@/db/index';
 import type {
   ListItem,
-  AddListItemEvent,
-  DeleteListItemEvent,
-  ModifyListItemEvent,
+  PreDbAddListItemEvent,
+  PreDbDeleteListItemEvent,
+  PreDbModifyListItemEvent,
 } from '@/types/index';
 
 export async function getListItems(listId: number) {
@@ -32,7 +32,7 @@ export async function getListItems(listId: number) {
   return results;
 }
 
-export async function addListItem(event: Omit<AddListItemEvent, 'id' | 'date'>) {
+export async function addListItem(event: PreDbAddListItemEvent) {
   const result = await sql`
     WITH inserted_item AS (
       INSERT INTO list_items (list_id, name, price)
@@ -73,18 +73,16 @@ export async function addListItem(event: Omit<AddListItemEvent, 'id' | 'date'>) 
   return result[0];
 }
 
-export function deleteListItem(event: Omit<DeleteListItemEvent, 'id' | 'date'>) {
+export function deleteListItem(event: PreDbDeleteListItemEvent) {
   return sql`
     WITH updated_item AS (UPDATE list_items SET active = false
       WHERE id = ${event.start.id})
     INSERT INTO list_events (list_id, event_type, user_id, start_id) 
-    VALUES (${event.listId}, 'delete', ${event.createdBy.id}, ${
-    event.start.id
-  });
+    VALUES (${event.listId}, 'delete', ${event.createdBy.id}, ${event.start.id});
   `;
 }
 
-export function modifyListItem(event: Omit<ModifyListItemEvent, 'id' | 'date'>) {
+export function modifyListItem(event: PreDbModifyListItemEvent) {
   return sql`
     WITH end_item AS (
       INSERT INTO list_items (list_id, name, price)

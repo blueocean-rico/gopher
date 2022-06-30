@@ -3,19 +3,19 @@ import { Button, TextInput } from '@mantine/core';
 //import { UserSelect } from '@/components/UserSelect';
 import { addList } from '@/server/lists/index';
 
-export default function AddListForm({ friends, setOpened }) {
+export default function NewListForm({ users }) {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [users, setUsers] = useState([]);
+  const [members, setMembers] = useState([]);
 
+  // {list: { name: string }; users: User[]}
   const handleSubmit = async () => {
     await fetch('/api/lists', {
       method: 'POST',
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({list: { name }, users: []}),
     });
     setName('');
     setLocation('');
-    setOpened(false);
   };
 
   return (
