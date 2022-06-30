@@ -4,6 +4,7 @@ import type { List, User, ListItemEvent } from '@/types/index';
 import NewListForm from '@/components/NewListForm';
 import { getLists, getListItemEvents } from '@/server/lists/index';
 import { getUsers } from '@/server/users/index';
+import ListItemEdit from '@/components/ListItemEdit';
 
 interface Props {
   lists: List[];
