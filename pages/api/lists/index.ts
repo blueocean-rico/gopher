@@ -7,7 +7,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { list, users } = <{ list: { name: string }; users: User[] }>req.body;
+    console.log(req.body);
+    const { list, users } = <{ list: { name: string }; users: User[] }>JSON.parse(req.body);
+    console.log(list, users);
     try {
       await addList(list, users);
       res.status(201).send(undefined);
