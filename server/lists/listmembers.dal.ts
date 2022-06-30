@@ -1,7 +1,7 @@
 import sql from '@/db/index';
 import type { User } from '@/types/index';
 
-export async function getShoppingListMembers(listId: number) {
+export async function getListMembers(listId: number) {
   const result = await sql<User[]>`
     SELECT u.*
     FROM lists_users l_u INNER JOIN users u ON l_u.user_id = u.id
@@ -11,7 +11,7 @@ export async function getShoppingListMembers(listId: number) {
   return { list_id: listId, users: result };
 }
 
-export function addShoppingListMembers(listId: number, users: User[]) {
+export function addListMembers(listId: number, users: User[]) {
   return sql`
     INSERT INTO lists_users ${sql(
       users.map((user) => ({
@@ -24,7 +24,7 @@ export function addShoppingListMembers(listId: number, users: User[]) {
   `;
 }
 
-export function deleteShoppingListMembers(listId: number, users: User[]) {
+export function deleteListMembers(listId: number, users: User[]) {
   return sql`
     DELETE FROM lists_users WHERE list_id = ${listId} AND
       user_id IN ${sql(users.map((user) => user.id))};

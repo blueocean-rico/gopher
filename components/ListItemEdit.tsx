@@ -7,7 +7,7 @@ import {
 } from '@mantine/core';
 import { Plus } from 'tabler-icons-react';
 
-export default function ShoppingListAdd({ members }) {
+export default function ListItemEdit({ members }) {
   const handleAdd = (event) => {};
 
   return (

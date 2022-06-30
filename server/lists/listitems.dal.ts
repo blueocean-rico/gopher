@@ -6,7 +6,7 @@ import type {
   ModifyListItemEvent,
 } from '@/types/index';
 
-export async function getShoppingListItems(listId: number) {
+export async function getListItems(listId: number) {
   const results = await sql<ListItem[]>`
     SELECT
       li.id AS id,
@@ -32,7 +32,7 @@ export async function getShoppingListItems(listId: number) {
   return results;
 }
 
-export async function addShoppingListItem(event: Omit<AddListItemEvent, 'id' | 'date'>) {
+export async function addListItem(event: Omit<AddListItemEvent, 'id' | 'date'>) {
   const result = await sql`
     WITH inserted_item AS (
       INSERT INTO list_items (list_id, name, price)
@@ -73,7 +73,7 @@ export async function addShoppingListItem(event: Omit<AddListItemEvent, 'id' | '
   return result[0];
 }
 
-export function deleteShoppingListItem(event: Omit<DeleteListItemEvent, 'id' | 'date'>) {
+export function deleteListItem(event: Omit<DeleteListItemEvent, 'id' | 'date'>) {
   return sql`
     WITH updated_item AS (UPDATE list_items SET active = false
       WHERE id = ${event.start.id})
@@ -84,7 +84,7 @@ export function deleteShoppingListItem(event: Omit<DeleteListItemEvent, 'id' | '
   `;
 }
 
-export function modifyShoppingListItem(event: Omit<ModifyListItemEvent, 'id' | 'date'>) {
+export function modifyListItem(event: Omit<ModifyListItemEvent, 'id' | 'date'>) {
   return sql`
     WITH end_item AS (
       INSERT INTO list_items (list_id, name, price)

@@ -1,7 +1,7 @@
 import sql from '@/db/index';
 import type { ListItemEvent } from '@/types/index';
 
-export function getShoppingListEvents(listIds: number[]) {
+export function getListItemEvents(listIds: number[]) {
   return sql<ListItemEvent[]>`
     SELECT e.id, e.list_id, e.event_type,
       json_build_object('id', u.id, 'email', u.email,
