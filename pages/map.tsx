@@ -1,11 +1,4 @@
-// import type { NextPage } from "next";
-
-// // const Map: NextPage = () => {
-// //   return (
-// //     <div>{process.env.NEXT_PUBLIC_GOOGLE_MAPS}</div>
-// //   )
-// // }
-
+import type { NextPage } from "next";
 import React, { useState } from "react";
 import {
   GoogleMap,
@@ -16,7 +9,8 @@ import {
   Autocomplete
   } from "@react-google-maps/api";
 
-  import { Button, TextInput } from '@mantine/core';
+  import { Button, TextInput, Box, THEME_ICON_SIZES } from '@mantine/core';
+import { FileX } from "tabler-icons-react";
 
 
 const containerStyle = {
@@ -33,12 +27,15 @@ const libraries = ['places'];
 
 const google_maps_api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS ?? '';
 
-function HomePage({ stores }) {
+// function HomePage({ stores }) {
+const Map: NextPage = ({ stores }) => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [searchValue, setSearchValue] = useState(null);
-  const [storesDefault, setStoresDefault] = useState(stores);
 
+  // This is the backup storage for the original stores fetched
+  const [storesDefault, setStoresDefault] = useState(stores);
+  // This is the updated stores list for the locations based on search. Also, we will modifiy this when a store is routed to bc we will need to remove everything that isn't this index
   const [newStores, setNewStores] = useState(stores);
 
 
@@ -58,6 +55,7 @@ function HomePage({ stores }) {
     setSearchValue(e.target.value);
   }
 
+  // IGNORE FOR NOW
   const searchSubmitClick = async (e) => {
     // going to rerun the fetch for this new value. I think we'll
     // keep the default zoom and stuff for now
@@ -81,12 +79,24 @@ function HomePage({ stores }) {
     // console.log(stores);
     // await setNewStores(stores);
   }
-
+  // IGNORE FOR NOW
   const autoCompleted = (val) => {
     console.log(val)
     console.log('hello')
   }
 
+
+  // This will be the client side data fetching for getting the directions to this specific place
+  const placeRouter = async () => {
+    // We can use selectedMarker as the index value for this
+    console.log('routing to ' + storesDefault[selectedMarker].name)
+  }
+
+
+
+  // ------------------------------------------------
+  //                  Rendering
+  // ------------------------------------------------
   if (!isLoaded) {
     return <div>Loading...</div>
   }
@@ -137,37 +147,57 @@ function HomePage({ stores }) {
                 >
                   <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1rem'}}>
                     {store.name}
-                    <Button size='xs' compact>
+
+                    {/* This is the routing to the store */}
+
+                    <Button
+                      size='xs'
+                      compact
+                      onClick={placeRouter}
+                    >
                       Route Here
                     </Button>
+
                   </div>
                 </InfoWindowF>
               ) : null}
             </MarkerF>
           ))}
         </GoogleMap>
-        <Autocomplete
-          onPlaceChanged={autoCompleted}
-        >
-          <TextInput
-            placeholder="Search"
-            style={
-              {
-                width: '250px',
-                transform: 'translate(1rem, -24rem)'
-              }
-            }
-            onChange={handleSearchInput}
-          />
-        </Autocomplete>
-        <Button
+
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.colors.gray[0],
+            borderRadius: theme.radius.md
+          })}
           style={{
-            transform: 'translate(17rem, -26.25rem)'
+            display: 'flex',
+            justifyContent: 'space-around',
+            width: '24rem',
+            transform: 'translate(1rem, -24rem)',
+            padding: '11px',
           }}
-          onClick={searchSubmitClick}
         >
-          Search
-        </Button>
+          <Autocomplete
+            onPlaceChanged={autoCompleted}
+          >
+            <TextInput
+              placeholder="Search"
+              style={
+                {
+                  width: '250px',
+                }
+              }
+              onChange={handleSearchInput}
+            />
+          </Autocomplete>
+          <Button
+            onClick={searchSubmitClick}
+          >
+            Search
+          </Button>
+        </Box>
+
 
       </div>
     </div>
@@ -200,4 +230,4 @@ export async function getStaticProps() {
 }
 
 
-export default HomePage;
+export default Map;
