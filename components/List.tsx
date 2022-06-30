@@ -1,8 +1,9 @@
-import { Paper, List, Card, Stack } from '@mantine/core';
-import ShoppingListItem from '@/components/ShoppingListItem';
-import ShoppingListAdd from '@/components/ShoppingListAdd';
+import { Paper, Card, Stack } from '@mantine/core';
+import ListItem from '@/components/ListItem';
+import ListItemEdit from '@/components/ListItemEdit';
 
-export default function ShoppingList({ tasks, members }) {
+export default function List({ items, members }) {
+  items=[];
   return (
     <Paper
       sx={(theme) => ({
@@ -10,13 +11,13 @@ export default function ShoppingList({ tasks, members }) {
       })}
     >
       <Stack>
-        <ShoppingListAdd members={members} />
-        {tasks.map((task) => (
-          <ShoppingListItem
-            key={task.id}
-            item={task.name}
-            price={task.price}
-            members={task.members}
+        <ListItemEdit members={members} mode={'add'}/>
+        {items.map((item) => (
+          <ListItem
+            key={item.id}
+            item={item.name}
+            price={item.price}
+            members={item.members}
           />
         ))}
       </Stack>

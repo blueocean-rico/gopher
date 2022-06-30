@@ -1,6 +1,6 @@
 import { Box, Paper, Stack, Title } from '@mantine/core';
 
-export default function BurrowMembers({ members }) {
+export default function ListMembers({ members }) {
   return (
     <Paper>
       <Title order={2}>Members</Title>

@@ -1,36 +1,24 @@
-import { useState } from 'react';
-import { Button, TextInput } from '@mantine/core';
-import { UserSelect } from '@/components/UserSelect';
-import { addShoppingList } from '@/server/lists/index';
+import {
+  ActionIcon,
+  Group,
+  Paper,
+  MultiSelect,
+  TextInput,
+} from '@mantine/core';
+import { Plus } from 'tabler-icons-react';
 
-export default function AddListForm({ friends, setOpened }) {
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [users, setUsers] = useState([]);
-
-  const handleSubmit = async () => {
-    await fetch('/api/lists', { method: 'POST', body: JSON.stringify({ name })});
-    setName('');
-    setLocation('');
-    setOpened(false);
-  };
+export default function ListItemEdit({ members }) {
+  const handleAdd = (event) => {};
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextInput
-        label="Name"
-        required
-        value={name}
-        onChange={(event) => setName(event.currentTarget.value)}
-      />
-      <TextInput
-        label="Location"
-        required
-        value={location}
-        onChange={(event) => setLocation(event.currentTarget.value)}
-      />
-      {/*<UserSelect data={friends} value={users} setValue={setUsers}/>*/}
-      <Button onClick={handleSubmit}>Submit</Button>
-    </form>
+    <Paper shadow="xs" p="xs" withBorder>
+      <Group position="apart">
+        <TextInput />
+        <MultiSelect data={members} />
+        <ActionIcon variant="filled">
+          <Plus size={16} />
+        </ActionIcon>
+      </Group>
+    </Paper>
   );
 }
