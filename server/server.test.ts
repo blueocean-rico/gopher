@@ -16,6 +16,15 @@ import {
   getListItemEvents,
 } from '@/server/lists/index';
 
+beforeAll(async () => {
+  await sql`DELETE FROM list_events`;
+  await sql`DELETE FROM lists`;
+  await sql`DELETE FROM lists_users`;
+  await sql`DELETE FROM list_items`;
+  await sql`DELETE FROM list_items_users`;
+  await sql`DELETE FROM users`;
+});
+
 afterEach(async () => {
   await sql`DELETE FROM list_events`;
   await sql`DELETE FROM lists`;

@@ -7,8 +7,8 @@ export function getUsers() {
   `;
 }
 
-export function addUser(user: Omit<User, 'id'>) {
+export function addUser(user: Omit<User, 'id'> | Omit<User, 'id' | 'picture'>) {
   return sql`
-    INSERT INTO users ${sql(user, 'email', 'nickname', 'picture')}
+    INSERT INTO users ${sql(user)}
   `;
 }
