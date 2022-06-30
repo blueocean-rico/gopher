@@ -1,6 +1,6 @@
 import type * as Types from '@/types/index';
 import sql from '@/db/index';
-import { addUser } from '@/server/users/index';
+import { addUser, getUsers } from '@/server/users/index';
 import {
   addList,
   deleteList,
@@ -48,12 +48,31 @@ describe('server', () => {
       expect(email).toEqual(user.email);
       expect(picture).toEqual(user.picture);
     });
+
+    it('should get all users', async () => {
+      const user = {
+        nickname: 'test',
+        email: 'test@email.com',
+        picture: 'https://picture.com',
+      };
+      const user2 = {
+        nickname: 'test2',
+        email: 'test2@email.com',
+        picture: 'https://picture2.com',
+      };
+
+      await addUser(user);
+      await addUser(user2);
+
+      const results = await getUsers();
+      expect(results).toHaveLength(2);
+    });
   });
 
   describe('lists', () => {
     it('should add a shopping list', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       const results = await sql`SELECT * FROM lists`;
       expect(results).toHaveLength(1);
@@ -64,7 +83,7 @@ describe('server', () => {
 
     it('should get the shopping lists', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       const results = await getLists();
       expect(results).toHaveLength(1);
@@ -73,7 +92,7 @@ describe('server', () => {
 
     it('should delete a shopping list', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
       let results = await sql`SELECT * FROM lists`;
       const listId = results[0].id;
 
@@ -85,7 +104,7 @@ describe('server', () => {
 
     it('should modify a shopping list', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
       let results = await getLists();
 
       const addedList = results[0];
@@ -101,7 +120,7 @@ describe('server', () => {
   describe('listmembers', () => {
     it('should add a shopping list member', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       const listResults = await getLists();
       const listId = listResults[0].id;
@@ -130,7 +149,7 @@ describe('server', () => {
 
     it('should get shopping list members', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -162,7 +181,7 @@ describe('server', () => {
 
     it('should delete a shopping list member', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -197,7 +216,7 @@ describe('server', () => {
   describe('listitems', () => {
     it('should add a shopping list item', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -242,7 +261,7 @@ describe('server', () => {
 
     it('should get shopping list items', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -282,7 +301,7 @@ describe('server', () => {
 
     it('should delete a shopping list item', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -329,7 +348,7 @@ describe('server', () => {
 
     it('should modify a shopping list item', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -381,7 +400,7 @@ describe('server', () => {
   describe('listevents', () => {
     it('should get a shopping list events', async () => {
       const list = { name: 'testlist' };
-      await addList(list);
+      await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
       const listId = results[0].id;
