@@ -6,7 +6,7 @@ export default function User({ user }) {
     <Paper shadow="xs" p="xs" withBorder>
       <SimpleGrid cols={2} spacing="xs">
         <Avatar />
-        <div>{user}</div>
+        <div>{user.nickname}</div>
       </SimpleGrid>
     </Paper>
   );
