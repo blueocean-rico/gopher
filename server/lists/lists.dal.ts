@@ -11,7 +11,7 @@ export async function getLists(userId?: number) {
 export function addList(list: { name: string }, users: User[]) {
   return sql`
     WITH inserted_list AS (
-      INSERT INTO lists ${sql(list, 'name')};
+      INSERT INTO lists ${sql(list, 'name')}
       RETURNING *)
     INSERT INTO lists_users (list_id, user_id)
       SELECT * FROM (
