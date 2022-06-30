@@ -1,4 +1,4 @@
-import { Paper, SimpleGrid } from "@mantine/core";
+import { Paper, SimpleGrid, Box } from "@mantine/core";
 import Avatar from "@/components/Avatar";
 
 export default function User({ user }) {
@@ -6,7 +6,7 @@ export default function User({ user }) {
     <Paper shadow="xs" p="xs" withBorder>
       <SimpleGrid cols={2} spacing="xs">
         <Avatar user={user} size="md" />
-        <div>{user.nickname}</div>
+        <Box>{user.nickname}</Box>
       </SimpleGrid>
     </Paper>
   );
