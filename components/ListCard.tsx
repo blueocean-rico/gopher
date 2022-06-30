@@ -1,6 +1,6 @@
 import {Card, Group, Title, Text, Badge, Button} from '@mantine/core';
 
-export default function ListCard({ name, date, members }) {
+export default function ListCard({ name, date, users }) {
   return (
     <div style={{ width: 340, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
@@ -9,7 +9,13 @@ export default function ListCard({ name, date, members }) {
         </Title>
 
         <Text size="sm" style={{ lineHeight: 1.5 }}>
-          members: xx, xx, xx
+          created: {date}
+        </Text>
+
+        <Text size="sm" style={{ lineHeight: 1.5 }}>
+          members: {users.map((user) => (
+            user.nickname
+          ))}
         </Text>
 
         <Badge color="pink" variant="light">
