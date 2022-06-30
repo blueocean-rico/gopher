@@ -1,5 +1,5 @@
-import sql from '@/db/index';
-import type { User } from '@/types/index';
+import sql from "@/db/index";
+import type { User } from "@/types/index";
 
 export async function getListMembers(listId: number) {
   const result = await sql<User[]>`
@@ -18,8 +18,8 @@ export function addListMembers(listId: number, users: User[]) {
         list_id: listId,
         user_id: user.id,
       })),
-      'user_id',
-      'list_id'
+      "user_id",
+      "list_id"
     )}
   `;
 }
@@ -28,5 +28,28 @@ export function deleteListMembers(listId: number, users: User[]) {
   return sql`
     DELETE FROM lists_users WHERE list_id = ${listId} AND
       user_id IN ${sql(users.map((user) => user.id))};
+  `;
+}
+
+export async function getGopher(listId: number) {
+  const result = await sql<User[]>`
+    SELECT gopher
+    FROM lists_users l_u
+    WHERE l_u.gopher = true and list_id = ${listId};
+  `;
+
+  return result[0];
+}
+
+export async function setGopher(listId: number, user: User) {
+  return sql`
+    WITH updated_gopher AS (
+      UPDATE lists_users
+      SET gopher = false
+      WHERE list_id = ${listId} and gopher = true
+    )
+      UPDATE lists_users
+      SET gopher = true
+      WHERE list_id = ${listId} and user_id = ${user.id}
   `;
 }
