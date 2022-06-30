@@ -15,7 +15,7 @@ interface Props {
 }
 
 const ListPage: NextPage<Props> = ({ items, members, events }) => {
-  console.log(items, members);
+  console.log('items', items, 'members', members, 'events', events);
   return <></>;
 };
 
