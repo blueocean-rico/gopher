@@ -8,7 +8,7 @@ export async function getListMembers(listId: number) {
     WHERE l_u.list_id = ${listId};
   `;
 
-  return { list_id: listId, users: result };
+  return { listId, users: result };
 }
 
 export function addListMembers(listId: number, users: User[]) {

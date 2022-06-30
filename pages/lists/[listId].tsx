@@ -1,26 +1,31 @@
 import type { NextPage } from 'next';
-import { Group, Paper, Title } from '@mantine/core';
-import ListMembers from '@/components/ListMembers';
-import List from '@/components/List';
+import type { GetServerSideProps } from 'next';
+import type { ListItem, User, ListItemEvent } from '@/types/index';
+import {} from '@/components/index';
+import {
+  getListItems,
+  getListMembers,
+  getListItemEvents,
+} from '@/server/lists/index';
 
-export default function ListPage({ tasks, members }): NextPage {
-  members = ['me', 'you'];
-  tasks = Array(10).fill({
-    id: 1,
-    name: 'broccoli',
-    price: 100,
-    quantity: 1,
-    units: 'kg',
-    members: ['me', 'you'],
-  });
-
-  return (
-    <Paper>
-      <Title order={1}>Your Items</Title>
-      <Group align="flex-start">
-        <List tasks={tasks} members={members} />
-        <ListMembers members={members} />
-      </Group>
-    </Paper>
-  );
+interface Props {
+  items: ListItem[];
+  members: User[];
+  events: ListItemEvent[];
 }
+
+const ListPage: NextPage<Props> = ({ items, members, events }) => {
+  console.log(items, members);
+  return <></>;
+};
+
+export default ListPage;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const listId = Number(context.query.listId);
+  const items = await getListItems(listId);
+  const members = await getListMembers(listId);
+  const events = await getListItemEvents([listId]);
+
+  return { props: { items, members, events } };
+};
