@@ -1,1 +1,1 @@
-export { addUser } from '@/server/users/users.dal';
+export * from '@/server/users/users.dal';
