@@ -8,3 +8,5 @@ const Avatar = ({ user, size }: {user: User; size: 'xs' | 'sm' | 'md';}) => {
    </MantineAvatar>
   );
 };
+
+export default Avatar;
