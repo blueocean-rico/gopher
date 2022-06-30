@@ -1,6 +1,6 @@
 import { Box, Text, Paper, CloseButton, Group } from '@mantine/core';
 
-export default function ShoppingListItem({ item, price, members }) {
+export default function ListItem({ item, price, members }) {
   const handleDelete = (event) => {};
 
   return (

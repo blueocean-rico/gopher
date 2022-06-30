@@ -5,9 +5,9 @@ import type {
   ModifyListItemEvent,
 } from '@/types/index';
 import {
-  addShoppingListItem,
-  modifyShoppingListItem,
-  deleteShoppingListItem,
+  addListItem,
+  modifyListItem,
+  deleteListItem,
 } from '@/server/lists/index';
 
 export default async function handler(
@@ -17,7 +17,7 @@ export default async function handler(
   if (req.method === 'POST') {
     const event = <AddListItemEvent>req.body;
     try {
-      await addShoppingListItem(event);
+      await addListItem(event);
       res.status(201).send(undefined);
     } catch (error) {
       console.log(error);
@@ -26,7 +26,7 @@ export default async function handler(
   } else if (req.method === 'PUT') {
     const event = <ModifyListItemEvent>req.body;
     try {
-      await modifyShoppingListItem(event);
+      await modifyListItem(event);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);
@@ -35,7 +35,7 @@ export default async function handler(
   } else if (req.method === 'DELETE') {
     const event = <DeleteListItemEvent>req.body;
     try {
-      await deleteShoppingListItem(event);
+      await deleteListItem(event);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);

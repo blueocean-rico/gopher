@@ -1,9 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from '@/types/index';
-import {
-  addShoppingListMembers,
-  deleteShoppingListMembers,
-} from '@/server/lists/index';
+import { addListMembers, deleteListMembers } from '@/server/lists/index';
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,7 +10,7 @@ export default async function handler(
     const listId = Number(req.query.listId);
     const { users } = <{ users: User[] }>req.body;
     try {
-      await addShoppingListMembers(listId, users);
+      await addListMembers(listId, users);
       res.status(201).send(undefined);
     } catch (error) {
       console.log(error);
@@ -23,7 +20,7 @@ export default async function handler(
     const listId = Number(req.query.listId);
     const { users } = <{ listId: number; users: User[] }>req.body;
     try {
-      await deleteShoppingListMembers(listId, users);
+      await deleteListMembers(listId, users);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);

@@ -1,14 +1,14 @@
 import sql from '@/db/index';
 import type { List, User } from '@/types/index';
 
-export async function getShoppingLists(userId?: number) {
+export async function getLists(userId?: number) {
   const lists = await sql<List[]>`
     SELECT * FROM lists;
   `;
   return lists;
 }
 
-export function addShoppingList(list: { name: string }, users: User[]) {
+export function addList(list: { name: string }, users: User[]) {
   return sql`
     WITH inserted_list AS (
       INSERT INTO lists ${sql(list, 'name')};
@@ -22,13 +22,13 @@ export function addShoppingList(list: { name: string }, users: User[]) {
   `;
 }
 
-export function deleteShoppingList(listId: number) {
+export function deleteList(listId: number) {
   return sql`
     DELETE FROM lists WHERE id = ${listId};
   `;
 }
 
-export function modifyShoppingList(list: List) {
+export function modifyList(list: List) {
   return sql`
     UPDATE lists SET name = ${list.name} WHERE id = ${list.id};
   `;

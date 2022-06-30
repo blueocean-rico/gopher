@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, TextInput } from '@mantine/core';
-import { UserSelect } from '@/components/UserSelect';
-import { addShoppingList } from '@/server/lists/index';
+//import { UserSelect } from '@/components/UserSelect';
+import { addList } from '@/server/lists/index';
 
 export default function AddListForm({ friends, setOpened }) {
   const [name, setName] = useState('');
@@ -9,7 +9,10 @@ export default function AddListForm({ friends, setOpened }) {
   const [users, setUsers] = useState([]);
 
   const handleSubmit = async () => {
-    await fetch('/api/lists', { method: 'POST', body: JSON.stringify({ name })});
+    await fetch('/api/lists', {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+    });
     setName('');
     setLocation('');
     setOpened(false);
@@ -34,7 +37,3 @@ export default function AddListForm({ friends, setOpened }) {
     </form>
   );
 }
-
-
-
-
