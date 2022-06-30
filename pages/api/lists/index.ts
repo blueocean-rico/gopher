@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { List, User } from '@/types/index';
+import type { PreDbList, List, User } from '@/types/index';
 import { addList, modifyList, deleteList } from '@/server/lists/index';
 
 export default async function handler(
