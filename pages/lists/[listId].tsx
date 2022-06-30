@@ -1,26 +1,28 @@
 import type { NextPage } from 'next';
-import { Group, Paper, Title } from '@mantine/core';
-import ListMembers from '@/components/ListMembers';
-import List from '@/components/List';
+import type { GetServerSideProps } from 'next';
+import type { ListItem, User } from '@/types/index';
+import { } from '@/components/index';
+import { getListItems, getListMembers } from '@/server/lists/index';
 
-export default function ListPage({ tasks, members }): NextPage {
-  members = ['me', 'you'];
-  tasks = Array(10).fill({
-    id: 1,
-    name: 'broccoli',
-    price: 100,
-    quantity: 1,
-    units: 'kg',
-    members: ['me', 'you'],
-  });
+interface Props {
+  items: ListItem[];
+  members: User[];
+}
 
+const ListPage: NextPage<Props> = ({ items, members }) => {
+  console.log(items, members);
   return (
-    <Paper>
-      <Title order={1}>Your Items</Title>
-      <Group align="flex-start">
-        <List tasks={tasks} members={members} />
-        <ListMembers members={members} />
-      </Group>
-    </Paper>
+    <>
+    </>
   );
+}
+
+export default ListPage;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const listId = Number(context.query.listId);
+  const items = await getListItems(listId);
+  const members = await getListMembers(listId);
+
+  return { props: { items, members } };
 }
