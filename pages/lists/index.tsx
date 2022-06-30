@@ -16,7 +16,10 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
   console.log('lists', lists, 'users', users, 'events', events);
   return (
     <>
+<<<<<<< HEAD
       <NewListForm />
+=======
+>>>>>>> 6752c8a (Done, with some hardcoded data)
     </>
   );
 }
