@@ -1,12 +1,13 @@
-import type { NextPage } from 'next';
-import type { GetServerSideProps } from 'next';
-import type { ListItem, User, ListItemEvent } from '@/types/index';
-import {} from '@/components/index';
+import type { NextPage } from "next";
+import type { GetServerSideProps } from "next";
+import type { ListItem, User, ListItemEvent } from "@/types/index";
+import {} from "@/components/index";
 import {
   getListItems,
   getListMembers,
   getListItemEvents,
-} from '@/server/lists/index';
+  getGopher,
+} from "@/server/lists/index";
 
 interface Props {
   items: ListItem[];
@@ -26,6 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const items = await getListItems(listId);
   const members = await getListMembers(listId);
   const events = await getListItemEvents([listId]);
+  const gopher = await getGopher(listId);
 
-  return { props: { items, members, events } };
+  return { props: { items, members, events, gopher } };
 };
