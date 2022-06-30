@@ -10,7 +10,7 @@ import {
   } from "@react-google-maps/api";
 
   import { Button, TextInput, Box, THEME_ICON_SIZES } from '@mantine/core';
-import { FileX } from "tabler-icons-react";
+import { Location } from "tabler-icons-react";
 
 
 const containerStyle = {
@@ -32,7 +32,10 @@ const Map: NextPage = ({ stores }) => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [searchValue, setSearchValue] = useState(null);
-
+  // For hovering the current location icon
+  const [isCurrentLocationHovering, setIsCurrentLocationHovering] = useState(false);
+  // const [map, setMap] = useState<google.maps.Map>(null)
+  // const [map, setMap] = useState(null)
   // This is the backup storage for the original stores fetched
   const [storesDefault, setStoresDefault] = useState(stores);
   // This is the updated stores list for the locations based on search. Also, we will modifiy this when a store is routed to bc we will need to remove everything that isn't this index
@@ -44,6 +47,7 @@ const Map: NextPage = ({ stores }) => {
     libraries: libraries,
   })
 
+  const [map, setMap] = useState<google.maps.Map>(null)
   // This is for clicking on the individual marker
   const handleMarkerClick = (index) => {
     setSelectedMarker(index);
@@ -93,6 +97,15 @@ const Map: NextPage = ({ stores }) => {
   }
 
 
+  // Both functions for handling the current location hovering
+  const handleMouseEnterCurrentLocation = () => {
+    setIsCurrentLocationHovering(true);
+  }
+  const handleMouseLeaveCurrentLocation = () => {
+    setIsCurrentLocationHovering(false);
+  }
+
+
 
   // ------------------------------------------------
   //                  Rendering
@@ -115,6 +128,7 @@ const Map: NextPage = ({ stores }) => {
             mapTypeControl: false,
             fullscreenControl: false
           }}
+          onLoad={(map) => setMap(map)}
         >
           <MarkerF
             position={center}
@@ -166,16 +180,18 @@ const Map: NextPage = ({ stores }) => {
         </GoogleMap>
 
         <Box
-          sx={(theme) => ({
-            backgroundColor: theme.colors.gray[0],
-            borderRadius: theme.radius.md
-          })}
+          // sx={(theme) => ({
+          //   backgroundColor: theme.colors.white[0],
+          //   borderRadius: theme.radius.md
+          // })}
           style={{
             display: 'flex',
             justifyContent: 'space-around',
             width: '24rem',
             transform: 'translate(1rem, -24rem)',
             padding: '11px',
+            backgroundColor: 'white',
+            borderRadius: '8px'
           }}
         >
           <Autocomplete
@@ -196,6 +212,31 @@ const Map: NextPage = ({ stores }) => {
           >
             Search
           </Button>
+        </Box>
+
+        <Box
+          sx={(theme) => ({
+            backgroundColor: 'white',
+            width: '2.5rem',
+            height: '2.5rem',
+            transform: 'translate(40.62rem, -13rem)',
+            borderRadius: '2.25px',
+            cursor: 'pointer',
+            boxShadow: '0px 0px 1.5px 0px grey'
+          })}
+
+          onMouseEnter={handleMouseEnterCurrentLocation}
+          onMouseLeave={handleMouseLeaveCurrentLocation}
+          onClick={() => map.panTo(center)}
+        >
+        <Location
+            size={28}
+            strokeWidth={2.3}
+            style={{
+              transform: 'translate(5px, 6px)',
+              color: isCurrentLocationHovering ? '#0F0F0F' : '#545454'
+            }}
+          />
         </Box>
 
 
