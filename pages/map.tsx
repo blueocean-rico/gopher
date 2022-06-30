@@ -9,13 +9,14 @@
 import React, { useState } from "react";
 import {
   GoogleMap,
-  LoadScript,
   MarkerF,
   useJsApiLoader,
   InfoWindowF,
-  DirectionsRenderer } from "@react-google-maps/api";
+  DirectionsRenderer,
+  Autocomplete
+  } from "@react-google-maps/api";
 
-  import { Button } from '@mantine/core';
+  import { Button, TextInput } from '@mantine/core';
 
 
 const containerStyle = {
@@ -28,24 +29,62 @@ const center = {
   lng: -122.349358,
 };
 
+const libraries = ['places'];
 
 const google_maps_api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS ?? '';
 
 function HomePage({ stores }) {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [searchValue, setSearchValue] = useState(null);
+  const [storesDefault, setStoresDefault] = useState(stores);
+
+  const [newStores, setNewStores] = useState(stores);
 
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: google_maps_api_key,
+    libraries: libraries,
   })
 
+  // This is for clicking on the individual marker
   const handleMarkerClick = (index) => {
-    console.log('im clicked')
-    console.log(index);
-    console.log(stores[index])
     setSelectedMarker(index);
+  }
 
+
+  // This is for the search bar
+  const handleSearchInput = (e) => {
+    setSearchValue(e.target.value);
+  }
+
+  const searchSubmitClick = async (e) => {
+    // going to rerun the fetch for this new value. I think we'll
+    // keep the default zoom and stuff for now
+    console.log(searchValue)
+
+
+    // const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=500&type=store&keyword=${searchValue}&key=${google_maps_api_key}`
+
+    // const res = await fetch(url, {
+    //   method: 'GET',
+    //   mode: 'cors',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // });
+
+    // const data = await res.json();
+
+    // const stores = data.results;
+
+    // console.log(stores);
+    // await setNewStores(stores);
+  }
+
+  const autoCompleted = (val) => {
+    console.log(val)
+    console.log('hello')
   }
 
   if (!isLoaded) {
@@ -55,10 +94,11 @@ function HomePage({ stores }) {
   return (
     <div style={{width: 'auto', height: '455px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <div style={{width: '700px', height: '400px'}}>
+
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={14}
+          zoom={15}
           options={{
             zoomControl: true,
             streetViewControl: false,
@@ -82,7 +122,8 @@ function HomePage({ stores }) {
               ) : null}
           {/* I could add some logic here for popping up the info d */}
           </MarkerF>
-          {stores.map((store, index) => (
+          {/* {stores.map((store, index) => ( */}
+          {newStores.map((store, index) => (
             <MarkerF
               position={store.geometry.location}
               key={index}
@@ -105,6 +146,29 @@ function HomePage({ stores }) {
             </MarkerF>
           ))}
         </GoogleMap>
+        <Autocomplete
+          onPlaceChanged={autoCompleted}
+        >
+          <TextInput
+            placeholder="Search"
+            style={
+              {
+                width: '250px',
+                transform: 'translate(1rem, -24rem)'
+              }
+            }
+            onChange={handleSearchInput}
+          />
+        </Autocomplete>
+        <Button
+          style={{
+            transform: 'translate(17rem, -26.25rem)'
+          }}
+          onClick={searchSubmitClick}
+        >
+          Search
+        </Button>
+
       </div>
     </div>
 
