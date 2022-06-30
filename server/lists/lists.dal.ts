@@ -1,5 +1,5 @@
 import sql from '@/db/index';
-import type { List, User } from '@/types/index';
+import type { PreDbList, List, User } from '@/types/index';
 
 export async function getLists(userId?: number) {
   const lists = await sql<List[]>`
@@ -8,7 +8,7 @@ export async function getLists(userId?: number) {
   return lists;
 }
 
-export function addList(list: { name: string }, users: User[]) {
+export function addList(list: PreDbList, users: User[]) {
   return sql`
     WITH inserted_list AS (
       INSERT INTO lists ${sql(list, 'name')}

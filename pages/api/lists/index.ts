@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { List, User } from '@/types/index';
+import type { PreDbList, List, User } from '@/types/index';
 import { addList, modifyList, deleteList } from '@/server/lists/index';
 
 export default async function handler(
@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { list, users } = <{ list: { name: string }; users: User[] }>req.body;
+    const { list, users } = <{ list: PreDbList; users: User[] }>req.body;
     try {
       await addList(list, users);
       res.status(201).send(undefined);
