@@ -12,7 +12,7 @@ import {
   } from "@react-google-maps/api";
 
 
-import { Button, TextInput, Box, Text } from '@mantine/core';
+import { Button, TextInput, Box, Text, Slider } from '@mantine/core';
 import { Location } from "tabler-icons-react";
 
 
@@ -56,6 +56,9 @@ const Map: NextPage = ({ stores }) => {
   const [currentLocation, setCurrentLocation] = useState(center);
   // this will be for the input box
   const [currentLocationInput, setCurrentLocationInput] = useState('');
+
+  // For the slider values
+  const [value, setValue] = useState(5);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: google_maps_api_key,
@@ -251,35 +254,57 @@ const Map: NextPage = ({ stores }) => {
 
 
         {/* This is all to do with the boxes, nothing inside of map */}
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            width: '24rem',
-            transform: 'translate(1rem, -27.5rem)',
-            padding: '11px',
-            backgroundColor: 'white',
-            borderRadius: '8px'
-          }}
-        >
-          <Autocomplete>
-            <TextInput
-              placeholder="Search"
-              style={
-                {
-                  width: '250px',
-                }
-              }
-              onChange={handleSearchInput}
-              // ref={destinationRef}
-            />
-          </Autocomplete>
-          <Button
-            onClick={searchSubmitClick}
+        <Box>
+          <Box
+            style={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              width: '24rem',
+              height: '6rem',
+              transform: 'translate(1rem, -27.5rem)',
+              padding: '11px',
+              backgroundColor: 'white',
+              borderRadius: '8px'
+            }}
           >
-            Search
-          </Button>
+            <Autocomplete>
+              <TextInput
+                placeholder="Search"
+                style={
+                  {
+                    width: '250px',
+                  }
+                }
+                onChange={handleSearchInput}
+                // ref={destinationRef}
+              />
+            </Autocomplete>
+            <Button
+              onClick={searchSubmitClick}
+            >
+              Search
+            </Button>
+          </Box>
+
+          {/* This is where I will add a slider */}
+          <Slider
+            value={value * 10}
+            onChange={(value) => setValue(value/10)}
+            label={(value) => `${value / 10}`}
+            style={{
+              width: '12rem',
+              transform: 'translate(3.75rem, -30rem)'
+            }}
+            marks={[
+              { value: 1, label: '1mi' },
+              { value: 25, label: '2.5mi' },
+              { value: 50, label: '5mi' },
+              { value: 75, label: '7.5mi' },
+              { value: 100, label: '10mi' },
+            ]}
+          />
         </Box>
+
 
         <Box
           sx={(theme) => ({
