@@ -2,8 +2,7 @@ import { Paper, Card, Stack } from '@mantine/core';
 import ListItem from '@/components/ListItem';
 import ListItemEdit from '@/components/ListItemEdit';
 
-export default function List({ items, members }) {
-  items=[];
+export default function List({ items, listId, users }) {
   return (
     <Paper
       sx={(theme) => ({
@@ -11,13 +10,13 @@ export default function List({ items, members }) {
       })}
     >
       <Stack>
-        <ListItemEdit members={members} mode={'add'}/>
+        <ListItemEdit listId={listId} item={undefined} users={users} />
         {items.map((item) => (
           <ListItem
             key={item.id}
-            item={item.name}
-            price={item.price}
-            members={item.members}
+            item={item}
+            editable = {true}
+            small = {false}
           />
         ))}
       </Stack>
