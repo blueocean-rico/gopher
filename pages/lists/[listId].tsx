@@ -47,7 +47,7 @@ const ListPage: NextPage<Props> = () => {
         <Stack justify="flex-start">
           <ListMembers listId={listId} members={members} users={users} />
           {/*<Link href={`lists/${list.id}/checkoout`} passHref>*/}
-          <Link href={`lists/checkout`} passHref>
+          <Link href={`/checkout`} >
             <Button color="blue">Checkout</Button>
           </Link>
         </Stack>
