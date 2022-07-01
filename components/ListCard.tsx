@@ -1,5 +1,5 @@
 import {Card, Group, Title, Text, Badge, Button, TextInput, Modal} from '@mantine/core';
-import { Pencil } from "tabler-icons-react";
+import { Pencil, X } from "tabler-icons-react";
 import { useState } from 'react';
 
 export default function ListCard({ list, users }) {
@@ -11,11 +11,31 @@ export default function ListCard({ list, users }) {
   const handleSubmit = async () => {
     await fetch('/api/lists', {
       method: 'PUT',
-      body: JSON.stringify({list: { name }, users: []}),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({list: { name , createdAt: list.createdAt, id: list.id}}),
     });
     setName('');
     setLocation('');
+    setMembers([]);
   };
+
+  const handleDelete = async () => {
+    await fetch('/api/lists', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ listId: list.id }),
+    });
+    setName('');
+    setLocation('');
+    setMembers([]);
+  };
+
   return (
     <div style={{ width: 340, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
@@ -64,6 +84,9 @@ export default function ListCard({ list, users }) {
           </Modal>
           <Button onClick={() => setOpened(true)}>
             <Pencil />
+          </Button>
+          <Button onClick={() => handleDelete()}>
+            <X />
           </Button>
         </Group>
       </Card>

@@ -23,7 +23,7 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
           <ListCard list={list} users={users} />
         ))}
       </Grid>
-      <NewListForm />
+      <NewListForm users={users} />
     </>
   );
 }
