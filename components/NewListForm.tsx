@@ -1,31 +1,51 @@
 import { useState } from 'react';
-import { Button, InputWrapper, TextInput, Title, Box, MultiSelect } from '@mantine/core';
+import {
+  Button,
+  InputWrapper,
+  TextInput,
+  Title,
+  Box,
+  MultiSelect,
+} from '@mantine/core';
 //import { UserSelect } from '@/components/UserSelect';
 import { addList } from '@/server/lists/index';
 
-export function NewListForm({ users }) {
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
+export function NewListForm({ users, list, setOpened }) {
+  const [name, setName] = useState(list ? list.name : '');
+  const [location, setLocation] = useState(list ? list.location : '');
   const [members, setMembers] = useState([]);
 
   // {list: { name: string }; users: User[]}
   const handleSubmit = async () => {
-    await fetch('/api/lists', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({list: { name }, users: members}),
-    });
+    if (list) {
+      await fetch(`/api/lists/`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          list: { name, location, id: list.id, createdAt: list.createdAt },
+        }),
+      });
+    } else {
+      await fetch('/api/lists', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ list: { name }, users: members }),
+      });
+    }
     setName('');
     setLocation('');
     setMembers([]);
+    setOpened(false);
   };
 
-
   return (
-    <Box style={{maxWidth: "100%"}} >
+    <Box style={{ maxWidth: '100%' }}>
       <form onSubmit={handleSubmit}>
         <InputWrapper
           label="Name"
@@ -35,7 +55,8 @@ export function NewListForm({ users }) {
           <TextInput
             value={name}
             placeholder="grocery list"
-            onChange={(event) => setName(event.currentTarget.value)}/>
+            onChange={(event) => setName(event.currentTarget.value)}
+          />
         </InputWrapper>
         <InputWrapper
           label="Location"
@@ -45,7 +66,8 @@ export function NewListForm({ users }) {
           <TextInput
             value={location}
             placeholder="123 Street, City, State"
-            onChange={(event) => setLocation(event.currentTarget.value)}/>
+            onChange={(event) => setLocation(event.currentTarget.value)}
+          />
         </InputWrapper>
         <InputWrapper
           label="Members"
@@ -53,15 +75,15 @@ export function NewListForm({ users }) {
           required
         >
           <MultiSelect
-            data={users.map((user) => (
-              {value: user, label: user.nickname}
-            ))}
+            data={users.map((user) => ({ value: user, label: user.nickname }))}
             value={members}
             onChange={setMembers}
-            />
+          />
         </InputWrapper>
         {/*<UserSelect data={friends} value={users} setValue={setUsers}/>*/}
-        <Button onClick={handleSubmit} style={{marginTop: 10}}>Create List</Button>
+        <Button onClick={handleSubmit} style={{ marginTop: 10 }}>
+          {list ? 'Modify List' : 'Create List'}
+        </Button>
       </form>
     </Box>
   );

@@ -44,7 +44,7 @@ const ListsPage: NextPage<Props> = () => {
           onClose={() => setOpened(false)}
           title="Create a new list"
         >
-          <NewListForm users={users} />
+          <NewListForm users={users} setOpened={setOpened}/>
         </Modal>
       </Stack>
       <Stack>
