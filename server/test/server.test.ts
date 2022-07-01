@@ -467,7 +467,6 @@ describe('server', () => {
       });
 
       const listEvents = await getListItemEvents([listId]);
-      console.log(JSON.stringify(listEvents));
       expect(listEvents).toHaveLength(3);
       expect(listEvents[0].eventType).toEqual('delete');
       expect(listEvents[1].eventType).toEqual('modify');
