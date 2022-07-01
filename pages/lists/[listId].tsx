@@ -3,6 +3,7 @@ import { Clock } from 'tabler-icons-react';
 import type { NextPage } from 'next';
 import type { GetServerSideProps } from 'next';
 import type { ListItem, Member, User, ListItemEvent } from '@/types/index';
+import { useRouter } from 'next/router'
 import { List, ListItemEdit, ListMembers } from '@/components/index';
 import { getUsers } from '@/server/users/index';
 import {
@@ -10,6 +11,7 @@ import {
   getListMembers,
   getListItemEvents,
 } from '@/server/lists/index';
+import useSWR from 'swr';
 
 interface Props {
   listId: number;
@@ -19,13 +21,18 @@ interface Props {
   users: User[];
 }
 
-const ListPage: NextPage<Props> = ({
-  listId,
-  items,
-  members,
-  events,
-  users,
-}) => {
+const ListPage: NextPage<Props> = () => {
+  const router = useRouter()
+  const fetcher = url => fetch(url).then(r => r.json())
+  const {data, error} = useSWR(`/api/lists/${router.query.listId}`, fetcher, { refreshInterval: 1000 })
+  if(!data) {
+    return <div></div>
+  }
+  if(!data.items) {
+    data.items = []
+    data.members = []
+  }
+  const {items, members, events, users, listId} = data
   console.log('items', items, 'members', members, 'events', events);
   return (
     <Stack>
@@ -51,14 +58,14 @@ const ListPage: NextPage<Props> = ({
 
 export default ListPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const listId = Number(context.query.listId);
-  const [users, items, members, events] = await Promise.all([
-    getUsers(),
-    getListItems(listId),
-    getListMembers(listId),
-    getListItemEvents([listId]),
-  ]);
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const listId = Number(context.query.listId);
+//   const [users, items, members, events] = await Promise.all([
+//     getUsers(),
+//     getListItems(listId),
+//     getListMembers(listId),
+//     getListItemEvents([listId]),
+//   ]);
 
-  return { props: { listId, items, members, events, users } };
-};
+//   return { props: { listId, items, members, events, users } };
+// };
