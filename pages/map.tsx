@@ -112,7 +112,7 @@ const Map: NextPage = ({ stores }) => {
     const directionsService = new google.maps.DirectionsService()
     const results = await directionsService.route({
       origin: center,
-      destination: stores[selectedMarker].geometry.location,
+      destination: newStores[selectedMarker].geometry.location,
       travelMode: google.maps.TravelMode.DRIVING
     })
 
@@ -203,9 +203,6 @@ const Map: NextPage = ({ stores }) => {
                     {/* I could have another rendering here */}
                     {directionsResponse !== null ?
                       <>
-                        {/* <DirectionsRenderer
-                          directions={directionsResponse}
-                        /> */}
                         <Text size='sm'>Distance: {distance}</Text>
                         <Text size='sm'>Duration: {duration}</Text>
                         <Button
