@@ -11,18 +11,15 @@ const Navbar: NextPage = () => {
   return (
     <>
       <Group
-        style={{ backgroundColor: "#219EBC", color: 'white', height: "4em", margin: 0 }}
+        style={{ backgroundColor: "#219EBC", color: 'white', padding: "10px 25px" }}
         position="apart"
       >
         <Link href="/">
           <Title order={1}>Gopher</Title>
         </Link>
-        <Group>
+        <Group sx={{alignItems: 'flex-start'}}>
           <Anchor component={NextLink} href="/profile">
-            <User style={{color: 'white'}}/>
-          </Anchor>
-          <Anchor component={NextLink} href="/">
-            <Bell style={{color: 'white'}} />
+            <User style={{color: 'white', marginTop: 5}}/>
           </Anchor>
           <Menu control={
           <Burger
@@ -30,23 +27,18 @@ const Navbar: NextPage = () => {
             onClick={() => setOpened((o) => !o)}
             title={title}
             color='white'
+
             />}
           >
             {/* We can add more into this as needed */}
-            <Menu.Item component={NextLink} href="/">
-              Home
-            </Menu.Item>
-            <Menu.Item component={NextLink} href="/households">
-              House Holds
-            </Menu.Item>
             <Menu.Item component={NextLink} href="/lists">
-              List
-            </Menu.Item>
-            <Menu.Item component={NextLink} href='/api/auth/logout'>
-              Sign out
+              Lists
             </Menu.Item>
             <Menu.Item component={NextLink} href='/calendar/test?name=test'>
               Calendar
+            </Menu.Item>
+            <Menu.Item component={NextLink} href='/api/auth/logout'>
+              Sign out
             </Menu.Item>
           </Menu>
         </Group>
