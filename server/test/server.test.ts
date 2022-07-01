@@ -184,8 +184,8 @@ describe('server', () => {
       await addListMembers(listId, [addedUser1, addedUser2]);
       const members = await getListMembers(listId);
 
-      expect(members.users).toContainEqual(addedUser1);
-      expect(members.users).toContainEqual(addedUser2);
+      expect(members).toContainEqual(addedUser1);
+      expect(members).toContainEqual(addedUser2);
     });
 
     it('should delete a shopping list member', async () => {
@@ -217,8 +217,8 @@ describe('server', () => {
       await deleteListMembers(listId, [addedUser1]);
       const members = await getListMembers(listId);
 
-      expect(members.users).not.toContainEqual(addedUser1);
-      expect(members.users).toContainEqual(addedUser2);
+      expect(members).not.toContainEqual(addedUser1);
+      expect(members).toContainEqual(addedUser2);
     });
   });
 
@@ -467,7 +467,6 @@ describe('server', () => {
       });
 
       const listEvents = await getListItemEvents([listId]);
-      console.log(JSON.stringify(listEvents));
       expect(listEvents).toHaveLength(3);
       expect(listEvents[0].eventType).toEqual('delete');
       expect(listEvents[1].eventType).toEqual('modify');
