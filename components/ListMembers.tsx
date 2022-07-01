@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Box, Paper, Stack, Title, Button, MultiSelect } from "@mantine/core";
-import User from "@/components/User";
-import type { Member, User as UserType } from "@/types/index";
-import { X } from "tabler-icons-react";
-import Image from "next/image";
+import React, { useState } from 'react';
+import { Box, Paper, Stack, Title, Button, MultiSelect } from '@mantine/core';
+import { User } from '@/components/index';
+import type { Member, User as UserType } from '@/types/index';
+import { X } from 'tabler-icons-react';
+import Image from 'next/image';
 
-export default function ListMembers({
+export function ListMembers({
   listId,
   users,
   members,
@@ -19,10 +19,10 @@ export default function ListMembers({
 
   const handleDeleteMember = async (member) => {
     const rawResponse = await fetch(`/lists/${listId}/members`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ listId, users: [member] }),
     });
@@ -31,10 +31,10 @@ export default function ListMembers({
   const handleRandomGoperClick = async () => {
     const ranGopherIndex = Math.floor(Math.random() * members.length);
     const rawResponse = await fetch(`/api/lists/${listId}/members`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ listId, user: members[ranGopherIndex] }),
     });
@@ -62,10 +62,10 @@ export default function ListMembers({
         addMembers.includes(user.nickname)
       );
       const rawResponse = await fetch(`/api/lists/${listId}/members`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ listId, users: newMembers }),
       });

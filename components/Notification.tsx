@@ -40,11 +40,15 @@ export function Notification({
           </Text>
         </Box>
         <Card>
-          <ListItem item={event.eventType !== 'delete' ? event.start : event.end} editable={false} small={true} />
+          <ListItem
+            item={event.eventType !== 'delete' ? event.start : event.end}
+            editable={false}
+            small={true}
+          />
           {event.eventType === 'modify' && (
             <>
               <ArrowRightBar strokeWidth={1} />
-              <ListItem item={event.end} editable={false} small={true}/>
+              <ListItem item={event.end} editable={false} small={true} />
             </>
           )}
         </Card>

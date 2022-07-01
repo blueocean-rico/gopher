@@ -1,7 +1,7 @@
 import { Paper, SimpleGrid, Box } from "@mantine/core";
-import Avatar from "@/components/Avatar";
+import { Avatar } from "@/components/index";
 
-export default function User({ user }) {
+export function User({ user }) {
   return (
     <Paper shadow="xs" p="xs" withBorder>
       <SimpleGrid cols={2} spacing="xs">

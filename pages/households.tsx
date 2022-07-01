@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
-import Navbar from "@/components/Navbar";
+import { Navbar, ListItem } from "@/components/index";
 import { List, Card, Title } from "@mantine/core";
-import ListItem from "@/components/ListItem";
 
 const Households: NextPage = () => {
   return (
