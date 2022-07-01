@@ -15,7 +15,9 @@ const Navbar: NextPage = () => {
         position="apart"
       >
         <Link href="/">
-          <Title order={1}>Gopher</Title>
+          <Anchor>
+            <Title order={1} style={{color: 'white'}}>Gopher</Title>
+          </Anchor>
         </Link>
         <Group sx={{alignItems: 'flex-start'}}>
           <Anchor component={NextLink} href="/profile">
