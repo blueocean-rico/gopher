@@ -1,15 +1,17 @@
 import type { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, MutableRefObject } from "react";
 import {
   GoogleMap,
   MarkerF,
+  Marker,
   useJsApiLoader,
   InfoWindowF,
+  InfoWindow,
   DirectionsRenderer,
   Autocomplete
   } from "@react-google-maps/api";
 
-  import { Button, TextInput, Box, THEME_ICON_SIZES } from '@mantine/core';
+  import { Button, TextInput, Box, Text } from '@mantine/core';
 import { Location } from "tabler-icons-react";
 
 
@@ -34,20 +36,25 @@ const Map: NextPage = ({ stores }) => {
   const [searchValue, setSearchValue] = useState(null);
   // For hovering the current location icon
   const [isCurrentLocationHovering, setIsCurrentLocationHovering] = useState(false);
-  // const [map, setMap] = useState<google.maps.Map>(null)
-  // const [map, setMap] = useState(null)
+  const [map, setMap] = useState<google.maps.Map>(null)
   // This is the backup storage for the original stores fetched
   const [storesDefault, setStoresDefault] = useState(stores);
   // This is the updated stores list for the locations based on search. Also, we will modifiy this when a store is routed to bc we will need to remove everything that isn't this index
   const [newStores, setNewStores] = useState(stores);
 
+  const [origin, setOrigin] = useState(null);
+
+  // For the directions
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState('');
+  const [duration, setDuration] = useState('');
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: google_maps_api_key,
     libraries: libraries,
   })
 
-  const [map, setMap] = useState<google.maps.Map>(null)
+
   // This is for clicking on the individual marker
   const handleMarkerClick = (index) => {
     setSelectedMarker(index);
@@ -89,11 +96,34 @@ const Map: NextPage = ({ stores }) => {
     console.log('hello')
   }
 
+  const handleMyMarkerClick = () => {
+    console.log('clicked')
+    setSelectedMarker(null)
+  }
 
-  // This will be the client side data fetching for getting the directions to this specific place
+  // THIS IS DIRECTIONS ROUTING
   const placeRouter = async () => {
     // We can use selectedMarker as the index value for this
     console.log('routing to ' + storesDefault[selectedMarker].name)
+    // THIS IS WHERE I WANT TO DO THE ROUTING
+    const directionsService = new google.maps.DirectionsService()
+    const results = await directionsService.route({
+      origin: center,
+      destination: stores[selectedMarker].geometry.location,
+      travelMode: google.maps.TravelMode.DRIVING
+    })
+
+    console.log(results);
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance.text)
+    setDuration(results.routes[0].legs[0].duration.text)
+  }
+
+  const routeCancelled = async () => {
+    console.log('route cancelled')
+    setDirectionsResponse(null);
+    setDistance('');
+    setDuration('');
   }
 
 
@@ -130,22 +160,21 @@ const Map: NextPage = ({ stores }) => {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <MarkerF
+          <Marker
             position={center}
             icon={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
-            onClick={() => setSelectedMarker('current location')}
+            onClick={() => {
+              setSelectedMarker('current location');
+              // setOrigin(center);
+            }}
           >
-            {selectedMarker === 'current location' ? (
-                <InfoWindowF
-                  onCloseClick={() => {
-                    setSelectedMarker(null);
-                  }}
-                >
-                  <div>Current Location</div>
+            {selectedMarker === 'current location' &&
+                <InfoWindowF onCloseClick={handleMyMarkerClick}>
+                {/* <InfoWindowF onCloseClick={() => console.log('hello')}> */}
+                  <span>Current Location</span>
                 </InfoWindowF>
-              ) : null}
-          {/* I could add some logic here for popping up the info d */}
-          </MarkerF>
+              }
+          </Marker>
           {/* {stores.map((store, index) => ( */}
           {newStores.map((store, index) => (
             <MarkerF
@@ -154,36 +183,65 @@ const Map: NextPage = ({ stores }) => {
               onClick={() => handleMarkerClick(index)}
             >
               {selectedMarker === index ? (
+                // This is for if the selected Marker is chosen, so we want
+                // another conditional here
+
+                // -------------------------------------------------------
+                // This is the one that works I believe
                 <InfoWindowF
                   onCloseClick={() => {
                     setSelectedMarker(null);
                   }}
                 >
                   <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1rem'}}>
-                    {store.name}
-
+                    <Text size='sm'>{store.name}</Text>
                     {/* This is the routing to the store */}
 
-                    <Button
-                      size='xs'
-                      compact
-                      onClick={placeRouter}
-                    >
-                      Route Here
-                    </Button>
-
+                    {/* I could have another rendering here */}
+                    {directionsResponse !== null ?
+                      <>
+                        {/* <DirectionsRenderer
+                          directions={directionsResponse}
+                        /> */}
+                        <Text size='sm'>Distance: {distance}</Text>
+                        <Text size='sm'>Duration: {duration}</Text>
+                        <Button
+                          size='xs'
+                          compact
+                          onClick={routeCancelled}
+                          color='red'
+                        >
+                          Cancel Route
+                        </Button>
+                      </>
+                    : <>
+                        <Button
+                            size='xs'
+                            compact
+                            onClick={placeRouter}
+                          >
+                            Route Here
+                        </Button>
+                      </>
+                    }
                   </div>
                 </InfoWindowF>
               ) : null}
             </MarkerF>
           ))}
+
+          {/* THIS IS HOW THE PAGE GETS POPULATED WITH THE DIRECTIONS */}
+          {directionsResponse &&
+            <DirectionsRenderer
+              directions={directionsResponse}
+            />
+          }
+
         </GoogleMap>
 
+
+        {/* This is all to do with the boxes, nothing inside of map */}
         <Box
-          // sx={(theme) => ({
-          //   backgroundColor: theme.colors.white[0],
-          //   borderRadius: theme.radius.md
-          // })}
           style={{
             display: 'flex',
             justifyContent: 'space-around',
@@ -194,9 +252,7 @@ const Map: NextPage = ({ stores }) => {
             borderRadius: '8px'
           }}
         >
-          <Autocomplete
-            onPlaceChanged={autoCompleted}
-          >
+          <Autocomplete>
             <TextInput
               placeholder="Search"
               style={
@@ -205,6 +261,7 @@ const Map: NextPage = ({ stores }) => {
                 }
               }
               onChange={handleSearchInput}
+              // ref={destinationRef}
             />
           </Autocomplete>
           <Button
