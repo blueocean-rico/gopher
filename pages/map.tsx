@@ -11,9 +11,11 @@ import {
   Autocomplete
   } from "@react-google-maps/api";
 
-  import { Button, TextInput, Box, Text } from '@mantine/core';
+
+import { Button, TextInput, Box, Text } from '@mantine/core';
 import { Location } from "tabler-icons-react";
 
+import { PlacesFetcher } from './api/map';
 
 const containerStyle = {
   width: '100%',
@@ -33,7 +35,7 @@ const google_maps_api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS ?? '';
 const Map: NextPage = ({ stores }) => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState<String>(null);
   // For hovering the current location icon
   const [isCurrentLocationHovering, setIsCurrentLocationHovering] = useState(false);
   const [map, setMap] = useState<google.maps.Map>(null)
@@ -72,23 +74,24 @@ const Map: NextPage = ({ stores }) => {
     // keep the default zoom and stuff for now
     console.log(searchValue)
 
+    let params = {searchValue: searchValue, ...center}
+    console.log('PARAMS')
+    console.log(params)
 
-    // const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=500&type=store&keyword=${searchValue}&key=${google_maps_api_key}`
+    if (searchValue.length > 0) {
+      fetch('/api/map?' + new URLSearchParams(params).toString())
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          // This is where we would reset the value of newStores
+          setNewStores(data.stores);
+        })
 
-    // const res = await fetch(url, {
-    //   method: 'GET',
-    //   mode: 'cors',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   }
-    // });
+      // console.log(stores);
+      // await setNewStores(stores);
+    }
 
-    // const data = await res.json();
 
-    // const stores = data.results;
-
-    // console.log(stores);
-    // await setNewStores(stores);
   }
   // IGNORE FOR NOW
   const autoCompleted = (val) => {
