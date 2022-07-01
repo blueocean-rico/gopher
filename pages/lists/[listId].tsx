@@ -33,13 +33,12 @@ const ListPage: NextPage<Props> = ({
       <Group align="baseline" spacing="lg">
         <Title order={1}>List Name</Title> <ActionIcon size={24}><Clock /></ActionIcon>
       </Group>
-      <Group align="stretch">
+      <Group align="stretch" spacing="xl">
         <Stack justify="flex-start">
           <ListItemEdit listId={listId} item={undefined} users={users} />
           <List listId={listId} items={items} users={users} />
         </Stack>
         <Stack justify="flex-start">
-          <Title order={2}>Members</Title>
           <ListMembers listId={listId} members={members} users={users} />
           {/*TODO: link to checkout page*/}
           <Button>Checkout</Button>
