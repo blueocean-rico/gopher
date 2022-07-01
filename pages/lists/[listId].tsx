@@ -28,20 +28,24 @@ const ListPage: NextPage<Props> = ({
 }) => {
   console.log('items', items, 'members', members, 'events', events);
   return (
-    <Group>
-      <Stack>
-        {/*TODO: set up fetching of actual list from db by listId (need to change lists.dal*/}
+    <Stack>
+      {/*TODO: set up fetching of actual list from db by listId (need to change lists.dal*/}
+      <Group>
         <Title order={1}>List Name</Title> <Clock />
-        <ListItemEdit users={users} />
-        <List listId={listId} items={items} users={users} />
-      </Stack>
-      <Stack>
-        <Title order={2}>Members</Title>
-        <ListMembers listId={listId} members={members} users={users} />
-        {/*TODO: link to checkout page*/}
-        <Button>Checkout</Button>
-      </Stack>
-    </Group>
+      </Group>
+      <Group>
+        <Stack justify="flex-start">
+          <ListItemEdit listId={listId} item={undefined} users={users} />
+          <List listId={listId} items={items} users={users} />
+        </Stack>
+        <Stack>
+          <Title order={2}>Members</Title>
+          <ListMembers listId={listId} members={members} users={users} />
+          {/*TODO: link to checkout page*/}
+          <Button>Checkout</Button>
+        </Stack>
+      </Group>
+    </Stack>
   );
 };
 
