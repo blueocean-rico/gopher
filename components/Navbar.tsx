@@ -1,35 +1,37 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { Grid, Menu, Button, Divider, Anchor } from "@mantine/core";
+import { Grid, Menu, Button, Divider, Anchor, Title, Burger, Group } from "@mantine/core";
 import { User, Bell } from "tabler-icons-react";
 import { NextLink } from "@mantine/next";
+import { useState } from 'react';
 
 const Navbar: NextPage = () => {
+  const [opened, setOpened] = useState(false);
+  const title = opened ? 'Close navigation' : 'Open navigation';
   return (
     <>
-      <Grid
-        style={{ backgroundColor: "lightBlue", height: "4em", margin: 0 }}
-        align="center"
+      <Group
+        style={{ backgroundColor: "#219EBC", color: 'white', height: "4em", margin: 0 }}
+        position="apart"
       >
-        <Grid.Col span={3}>
-          <Link href="/">
-            <Button variant="default">Gopher</Button>
-          </Link>
-        </Grid.Col>
-        <Grid.Col
-          span={1}
-          offset={6}
-          style={{ textAlign: "center", marginTop: "0.4em" }}
-        >
+        <Link href="/">
+          <Title order={1}>Gopher</Title>
+        </Link>
+        <Group>
           <Anchor component={NextLink} href="/profile">
-            <User />
+            <User style={{color: 'white'}}/>
           </Anchor>
           <Anchor component={NextLink} href="/">
-            <Bell />
+            <Bell style={{color: 'white'}} />
           </Anchor>
-        </Grid.Col>
-        <Grid.Col span={2} offset={0} style={{ textAlign: "center" }}>
-          <Menu control={<Button variant="default">Options</Button>}>
+          <Menu control={
+          <Burger
+            opened={opened}
+            onClick={() => setOpened((o) => !o)}
+            title={title}
+            color='white'
+            />}
+          >
             {/* We can add more into this as needed */}
             <Menu.Item component={NextLink} href="/">
               Home
@@ -47,8 +49,8 @@ const Navbar: NextPage = () => {
               Calendar
             </Menu.Item>
           </Menu>
-        </Grid.Col>
-      </Grid>
+        </Group>
+      </Group>
       <Divider />
     </>
   );

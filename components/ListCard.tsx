@@ -56,7 +56,7 @@ export default function ListCard({ list, users }) {
         </Title>
 
         <Text size="sm" style={{ lineHeight: 1.5 }}>
-          {list.createdAt}
+          {list.createdAt.split(' ')[0]}
         </Text>
 
         <Text style={{ lineHeight: 1.5 }}>
@@ -66,12 +66,12 @@ export default function ListCard({ list, users }) {
         </Text>
 
         <Badge color="pink" variant="light">
-          current gopher: {users[0].nickname}
+          gopher: {users.gopher}
         </Badge>
 
         <Group position="apart">
           <Box>
-            <Link href={`/lists/[${list.id}]`} passHref>
+            <Link href={`lists/${list.id}`} passHref>
               <Button color="blue" style={{margin:5}}>
                 view list
               </Button>
