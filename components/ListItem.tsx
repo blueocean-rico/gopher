@@ -1,33 +1,43 @@
+import { useState } from 'react';
 import {
   Stack,
   CloseButton,
   Box,
   Text,
   Paper,
+  Modal,
   Group,
   ActionIcon,
 } from '@mantine/core';
 import { Pencil } from 'tabler-icons-react';
 import { Avatar } from '@/components/index';
-import type { ListItem } from '@/types/index';
+import type { ListItem, Member } from '@/types/index';
+import { ListItemEdit } from '@/components/index';
 
 export function ListItem({ item, small }: { item: ListItem; small: true });
 export function ListItem({
   item,
   editable,
+  members,
 }: {
   item: ListItem;
   editable: boolean;
+  small: boolean;
+  members: Member[];
 });
 export function ListItem({
   item,
   editable,
   small,
+  members,
 }: {
   item: ListItem;
   editable?: boolean;
   small?: boolean;
+  members?: Member[];
 }) {
+  const [opened, setOpened] = useState(false);
+
   const handleDelete = () => {
     fetch(`api/lists/${item.listId}/items`, {
       method: 'DELETE',
@@ -46,26 +56,41 @@ export function ListItem({
   };
 
   const handleEdit = (event) => {
-    //TODO make work with the listItemEdit
+    setOpened(true);
   };
 
   if (small) {
     console.log(item);
     return (
       <Text>
-        Avatar {item.name}, ${item.price}
+        ${item.name} ${item.price}
       </Text>
     );
   } else if (editable) {
     return (
       <Paper shadow="xs" p="xs" withBorder>
+        <Modal
+          opened={opened}
+          onClose={() => setOpened(false)}
+          title={`edit item`}
+        >
+          <ListItemEdit
+            listId={item.listId}
+            members={members}
+            item={item}
+            setOpened={setOpened}
+          />
+        </Modal>
+
         <Stack>
           <Group position="apart">
-            <Box>{item.name}</Box>
-            <ActionIcon variant="hover" onClick={handleEdit}>
-              <Pencil />
-            </ActionIcon>
-            <CloseButton variant="hover" onClick={handleDelete} />
+            {item.name}
+            <Group>
+              <ActionIcon variant="hover" onClick={handleEdit} size="sm">
+                <Pencil strokeWidth={1} />
+              </ActionIcon>
+              <CloseButton variant="hover" onClick={handleDelete} />
+            </Group>
           </Group>
           <Group>
             <Box>${item.price}</Box>

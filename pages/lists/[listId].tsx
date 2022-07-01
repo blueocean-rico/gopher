@@ -41,8 +41,8 @@ const ListPage: NextPage<Props> = () => {
       </Group>
       <Group align="stretch" spacing="xl">
         <Stack justify="flex-start">
-          <ListItemEdit listId={listId} item={undefined} users={users} />
-          <List listId={listId} items={items} users={users} />
+          <ListItemEdit listId={listId} item={undefined} members={members} />
+          <List listId={listId} items={items} members={members}/>
         </Stack>
         <Stack justify="flex-start">
           <ListMembers listId={listId} members={members} users={users} />
