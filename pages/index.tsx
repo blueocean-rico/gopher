@@ -1,5 +1,7 @@
 import {useUser} from '@auth0/nextjs-auth0';
 import type { NextPage } from "next";
+import Router from 'next/router';
+import { useEffect } from 'react';
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from 'next/link'
@@ -7,6 +9,14 @@ import { Title, Button, Grid, Text } from "@mantine/core";
 
 const Home: NextPage = () => {
   const {user, error, isLoading} = useUser();
+
+  useEffect(() => {
+    const {pathname} = Router
+    if(pathname == '/' && user){
+        Router.push('/lists')
+    }
+  });
+
   if (isLoading) {
     return (
       <div>
@@ -41,40 +51,6 @@ const Home: NextPage = () => {
       </Grid>
     )
   }
-  return (
-    <div>
-      <Title>Welcome {user?.given_name}!</Title>
-      <Grid>
-        <Grid.Col span={3}>
-          <Title order={3}>Your Households</Title>
-          <Text>Houshold A</Text>
-          <Text>Houshold B</Text>
-          <Text>Houshold C</Text>
-          <Link href='/households' passHref>
-            <Button>See your households</Button>
-          </Link>
-        </Grid.Col>
-        <Grid.Col span={3}>
-          <Title order={3}>Lists</Title>
-          <Text>List 1</Text>
-          <Text>List 2</Text>
-          <Text>List 3</Text>
-          <Link href='/lists' passHref>
-            <Button>See your lists</Button>
-          </Link>
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <Title order={3}>Whats new</Title>
-          <Text>Notification 1</Text>
-          <Text>Notification 2</Text>
-          <Text>Notification 3</Text>
-          <Link href='/notifications' passHref>
-            <Button>See all Notifications</Button>
-          </Link>
-        </Grid.Col>
-      </Grid>
-    </div>
-  )
 };
 
 export default Home;
