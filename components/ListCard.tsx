@@ -2,7 +2,7 @@ import {Card, Group, Title, Text, Badge, Button, TextInput, Modal, Box} from '@m
 import { Pencil, X } from "tabler-icons-react";
 import { useState } from 'react';
 import { getListMembers } from '@/server/lists/listmembers.dal';
-import NewListForm from './NewListForm';
+import {NewListForm} from '@/components/index';
 import Link from 'next/link'
 
 export default function ListCard({ list, users }) {
