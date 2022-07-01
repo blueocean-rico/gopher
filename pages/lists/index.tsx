@@ -5,6 +5,7 @@ import NewListForm from '@/components/NewListForm';
 import { getLists, getListItemEvents } from '@/server/lists/index';
 import { getUsers } from '@/server/users/index';
 import ListCard from '@/components/ListCard';
+import { Grid } from '@mantine/core';
 
 interface Props {
   lists: List[];
@@ -19,7 +20,7 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
       <Grid>
         {lists.map((list) => (
           // <ListCard { list.name, list.createdAt, users}/>
-          <ListCard/>
+          <ListCard list={list} users={users} />
         ))}
       </Grid>
       <NewListForm />
