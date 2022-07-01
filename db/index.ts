@@ -1,6 +1,9 @@
 import postgres from 'postgres';
 
 const sql = postgres({
+  idle_timeout: 20,
+  max: 100,
+  max_lifetime: 60 * 10,
   transform: {
     column: {
       to: postgres.fromCamel,

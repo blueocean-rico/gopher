@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { PreDbList, List, User } from '@/types/index';
-import { addList, modifyList, deleteList } from '@/server/lists/index';
+import { getUsers } from '@/server/users/index';
+import { addList, modifyList, deleteList, getLists, getListItemEvents } from '@/server/lists/index';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,7 +17,7 @@ export default async function handler(
       res.status(500).send(undefined);
     }
   } else if (req.method === 'PUT') {
-    const list = <List>req.body;
+    const { list } = <{ list: List }>req.body;
     try {
       await modifyList(list);
       res.status(204).send(undefined);
@@ -33,6 +34,12 @@ export default async function handler(
       console.log(error);
       res.status(500).send(undefined);
     }
+  } else if (req.method === 'GET') {
+    const lists = await getLists();
+    const users = await getUsers();
+    const listIds = lists.map((list) => list.id);
+    const events = await getListItemEvents(listIds);
+    res.status(200).send((JSON.stringify({ lists, users, events })))
   } else {
     res.status(400).send(undefined);
   }
