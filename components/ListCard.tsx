@@ -1,12 +1,24 @@
-import {Card, Group, Title, Text, Badge, Button, TextInput, Modal} from '@mantine/core';
+import {Card, Group, Title, Text, Badge, Button, TextInput, Modal, Box} from '@mantine/core';
 import { Pencil, X } from "tabler-icons-react";
 import { useState } from 'react';
+import { getListMembers } from '@/server/lists/listmembers.dal';
+import NewListForm from './NewListForm';
+import Link from 'next/link'
 
 export default function ListCard({ list, users }) {
   const [opened, setOpened] = useState(false);
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
+  const [gopher, setGopher] = useState('');
   const [members, setMembers] = useState([]);
+
+  //getlistmembers from server/lists/listmembers.dal.ts
+  // const getMembers = async () => {
+  //   const result = await getListMembers(list.id);
+  //   return result
+  // }
+  // const listMembers = getMembers();
+  // console.log(listMembers)
 
   const handleSubmit = async () => {
     await fetch('/api/lists', {
@@ -37,7 +49,7 @@ export default function ListCard({ list, users }) {
   };
 
   return (
-    <div style={{ width: 340, margin: 'auto' }}>
+    <div style={{ width: 400, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
         <Title>
           {list.name}
@@ -58,36 +70,28 @@ export default function ListCard({ list, users }) {
         </Badge>
 
         <Group position="apart">
-          <Button color="blue" >
-            view list
-          </Button>
-          <Modal
-            opened={opened}
-            onClose={() => setOpened(false)}
-            title="Edit this list"
-          >
-            <form onSubmit={handleSubmit}>
-            <TextInput
-              label="Name"
-              required
-              value={name}
-              onChange={(event) => setName(event.currentTarget.value)}
-            />
-            <TextInput
-              label="Location"
-              required
-              value={location}
-              onChange={(event) => setLocation(event.currentTarget.value)}
-            />
-              <Button onClick={handleSubmit}>Submit</Button>
-            </form>
-          </Modal>
-          <Button onClick={() => setOpened(true)}>
-            <Pencil />
-          </Button>
-          <Button onClick={() => handleDelete()}>
-            <X />
-          </Button>
+          <Box>
+            <Link href={`/lists/[${list.id}]`} passHref>
+              <Button color="blue" style={{margin:5}}>
+                view list
+              </Button>
+            </Link>
+          </Box>
+          <Box>
+            <Modal
+              opened={opened}
+              onClose={() => setOpened(false)}
+              title={`edit ${list.name}`}
+            >
+              <NewListForm users={users}/>
+            </Modal>
+            <Button onClick={() => setOpened(true)} style={{margin:5}}>
+              <Pencil />
+            </Button>
+            <Button onClick={() => handleDelete()} style={{margin:5}}>
+              <X />
+            </Button>
+          </Box>
         </Group>
       </Card>
     </div>

@@ -26,9 +26,6 @@ export default function NewListForm({ users }) {
 
   return (
     <Box style={{maxWidth: "100%"}} >
-      <Title order={3}>
-        Create a new List
-      </Title>
       <form onSubmit={handleSubmit}>
         <InputWrapper
           label="Name"
@@ -63,20 +60,8 @@ export default function NewListForm({ users }) {
             onChange={setMembers}
             />
         </InputWrapper>
-        {/* <TextInput
-          label="Name"
-          required
-          value={name}
-          onChange={(event) => setName(event.currentTarget.value)}
-        /> */}
-        {/* <TextInput
-          label="Location"
-          required
-          value={location}
-          onChange={(event) => setLocation(event.currentTarget.value)}
-        /> */}
         {/*<UserSelect data={friends} value={users} setValue={setUsers}/>*/}
-        <Button onClick={handleSubmit}>Create List</Button>
+        <Button onClick={handleSubmit} style={{marginTop: 10}}>Create List</Button>
       </form>
     </Box>
   );
