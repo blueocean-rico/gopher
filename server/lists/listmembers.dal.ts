@@ -2,13 +2,11 @@ import sql from '@/db/index';
 import type { Member, User } from '@/types/index';
 
 export async function getListMembers(listId: number) {
-  const result = await sql<Member[]>`
+  return await sql<Member[]>`
     SELECT u.*
     FROM lists_users l_u INNER JOIN users u ON l_u.user_id = u.id
     WHERE l_u.list_id = ${listId};
   `;
-
-  return { listId, users: result };
 }
 
 export function addListMembers(listId: number, users: User[]) {
