@@ -1,21 +1,21 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getUsers } from "@/server/users/index";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getUsers } from '@/server/users/index';
 import {
   getLists,
   getListItems,
   getListMembers,
   getListItemEvents,
-} from "@/server/lists/index";
+} from '@/server/lists/index';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     try {
       const listId = Number(req.query.listId);
       const [list, users, items, members, events] = await Promise.all([
-        getLists([listId]),
+        getLists(listId),
         getUsers(),
         getListItems(listId),
         getListMembers(listId),

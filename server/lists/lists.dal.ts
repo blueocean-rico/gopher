@@ -1,13 +1,18 @@
 import sql from '@/db/index';
 import type { PreDbList, List, User } from '@/types/index';
 
-export async function getLists(listIds?: number[]) {
-  const lists = await sql<List[]>`
-    SELECT * FROM lists ${
-      listIds !== undefined ? `WHERE id IN ${sql(listIds)}` : sql``
+export async function getLists(listId: number) {
+  const result = await sql<List[]>`
+    SELECT * FROM lists WHERE id IS NOT NULL ${
+      listId !== undefined ? sql`AND id = ${listId}` : sql``
     };
   `;
-  return lists;
+
+  if (listId) {
+    return result[0];
+  }
+
+  return result;
 }
 
 export function addList(list: PreDbList, users: User[]) {
