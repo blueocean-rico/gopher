@@ -11,7 +11,7 @@ export async function getLists() {
 export function addList(list: PreDbList, users: User[]) {
   return sql`
     WITH inserted_list AS (
-      INSERT INTO lists ${sql(list, 'name')}
+      INSERT INTO lists ${sql(list)}
       RETURNING *)
     INSERT INTO lists_users (list_id, user_id)
       SELECT * FROM (
@@ -29,7 +29,8 @@ export function deleteList(listId: number) {
 }
 
 export function modifyList(list: List) {
+  const { name, location } = list;
   return sql`
-    UPDATE lists SET name = ${list.name} WHERE id = ${list.id};
+    UPDATE lists SET ${sql({ name, location })} WHERE id = ${list.id};
   `;
 }
