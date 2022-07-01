@@ -54,4 +54,4 @@ const Navbar: NextPage = () => {
   );
 };
 
-export default Navbar;
+export { Navbar };

@@ -1,13 +1,13 @@
-import { Box, Text, Paper, CloseButton, Group, Button } from "@mantine/core";
-import { Pencil } from "tabler-icons-react";
+import { Box, Text, Paper, Group, Button } from '@mantine/core';
+import { Pencil } from 'tabler-icons-react';
 
-export default function ListItem({ item, editable, small }) {
+export function ListItem({ item, editable, small }) {
   const handleDelete = () => {
     console.log(item);
-    fetch("api/lists/0/items", {
-      method: "DELETE",
+    fetch('api/lists/0/items', {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         // TODO change them if there is dynamic available
@@ -37,7 +37,7 @@ export default function ListItem({ item, editable, small }) {
           <Box>Render Avatar here once it is done</Box>
           <Box>{item.name}</Box>
           <Box>${item.price}</Box>
-          <Box>{item.members.join(", ")}</Box>
+          <Box>{item.members.join(', ')}</Box>
           <Button variant="subtle" color="dark" onClick={handleDelete}>
             X
           </Button>
