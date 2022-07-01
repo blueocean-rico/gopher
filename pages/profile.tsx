@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { NextPage } from "next";
 import {
   Group,
   Title,
@@ -10,8 +10,8 @@ import {
   Card,
   Text,
   Badge,
-} from '@mantine/core';
-import { useUser } from '@auth0/nextjs-auth0';
+} from "@mantine/core";
+import { useUser } from "@auth0/nextjs-auth0";
 
 const UserProfile: NextPage = () => {
   const { user } = useUser();
@@ -20,28 +20,29 @@ const UserProfile: NextPage = () => {
     <div>
       <Title>Hello {user?.given_name}</Title>
       <Grid>
-        <Grid.Col span={2}>
+        <Grid.Col span={1}>
           <Image
             src={user?.picture}
-            width={100}
-            height={100}
+            width={50}
+            height={50}
             radius="lg"
             alt="google profile image"
             withPlaceholder
           />
         </Grid.Col>
         <Grid.Col span={6}>
-          <ScrollArea>details about the user</ScrollArea>
+          <Text>Name: {user.name}</Text>
+          <Text>Email: {user.email}</Text>
           <Button>edit details</Button>
         </Grid.Col>
       </Grid>
-      <Divider />
+      {/* <Divider />
       <Title order={3}>Households</Title>
-      {/*
+       *
        *
        ***** These cards will be a map of the users households *****
        *
-       */}
+       *
       <div style={{ width: 340, margin: 50 }}>
         <Card shadow="sm" p="lg" radius="lg">
           <Card.Section>
@@ -74,7 +75,7 @@ const UserProfile: NextPage = () => {
           </Button>
         </Card>
       </div>
-      <Divider />
+      <Divider /> */}
     </div>
   );
 };
