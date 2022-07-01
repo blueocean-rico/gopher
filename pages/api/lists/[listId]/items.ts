@@ -26,6 +26,7 @@ export default async function handler(
   } else if (req.method === 'PUT') {
     const event = <PreDbModifyListItemEvent>req.body;
     try {
+      console.log(event);
       await modifyListItem(event);
       res.status(204).send(undefined);
     } catch (error) {

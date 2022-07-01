@@ -1,7 +1,7 @@
 import { Paper, Stack } from '@mantine/core';
 import { ListItem } from '@/components/index';
 
-export function List({ items, listId, users }) {
+export function List({ items, listId, users, members }) {
   return (
     <Paper
       sx={(theme) => ({
@@ -10,7 +10,7 @@ export function List({ items, listId, users }) {
     >
       <Stack>
         {items.map((item) => (
-          <ListItem key={item.id} item={item} editable={true} small={false} />
+          <ListItem key={item.id} item={item} editable={true} small={false} users={users} members={members}/>
         ))}
       </Stack>
     </Paper>

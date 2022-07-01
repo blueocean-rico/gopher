@@ -8,18 +8,18 @@ import {
 import { ReactNode, useState } from 'react';
 import { Check, Plus } from 'tabler-icons-react';
 
-export function ListItemEdit({ users, item = undefined, listId }) {
-  const [price, setPrice] = useState('');
-  const [name, setName] = useState('');
-  const [assignedUsers, setAssignedUsers] = useState([]);
+export function ListItemEdit({ members, item = undefined, listId, setOpened }) {
+  const [price, setPrice] = useState(item ? item.price : '');
+  const [name, setName] = useState(item ? item.name : '');
+  const [assignedMembers, setAssignedMembers] = useState(item ? item.users.map(user => user.nickname) : []);
 
-  const names = users.map((user: { nickname: string }) => user.nickname);
+  const names = members.map((user: { nickname: string }) => user.nickname);
 
   const handleAdd = (newItem) => {
     const userList = [];
-    users.forEach((user) => {
-      if (assignedUsers.indexOf(user.nickname) !== -1) {
-        userList.push(user);
+    members.forEach((member) => {
+      if (assignedMembers.indexOf(member.nickname) !== -1) {
+        userList.push(member);
       }
     });
     if (newItem) {
@@ -41,14 +41,8 @@ export function ListItemEdit({ users, item = undefined, listId }) {
       fetch(`/api/lists/1/items`, {
         method: 'PUT',
         body: JSON.stringify({
-          start: {
-            id: item.id,
-            name: 'temp',
-            price: 123,
-            users: ['temp'],
-            listId: 1,
-          },
-          end: { id: 1, listId, name, price, users: userList },
+          start: item,
+          end: { ...item, name, price, users: members.filter(member => assignedMembers.includes(member.nickname))},
           listId,
           eventType: 'modify',
           createdBy: { id: 1 },
@@ -58,7 +52,12 @@ export function ListItemEdit({ users, item = undefined, listId }) {
           'Content-Type': 'application/json',
         },
       });
+
+      setOpened(false);
     }
+    setName('');
+    setPrice('');
+    setAssignedMembers([]);
   };
 
   let confirm: ReactNode;
@@ -83,8 +82,8 @@ export function ListItemEdit({ users, item = undefined, listId }) {
         />
         <MultiSelect
           data={names}
-          value={assignedUsers}
-          onChange={setAssignedUsers}
+          value={assignedMembers}
+          onChange={setAssignedMembers}
           placeholder="users"
         />
         <ActionIcon variant="filled">{confirm}</ActionIcon>
