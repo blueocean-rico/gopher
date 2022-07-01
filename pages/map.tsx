@@ -12,7 +12,7 @@ import {
   } from "@react-google-maps/api";
 
 
-import { Button, TextInput, Box, Text, Slider, SimpleGrid, Stack, Title } from '@mantine/core';
+import { Button, TextInput, Box, Text, Slider } from '@mantine/core';
 import { Location } from "tabler-icons-react";
 
 
@@ -147,45 +147,21 @@ const Map: NextPage = ({ stores }) => {
     setIsCurrentLocationHovering(false);
   }
 
-  const gopherCompleted = async () => {
-    // await fetch(`/lists/${listId}`, {
-    //   method: "DELETE",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ listId }),
-    // });
-  };
-
   useEffect(() => {
     searchSubmitClick();
   }, [currentLocation])
+
 
 
   // ------------------------------------------------
   //                  Rendering
   // ------------------------------------------------
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
-    <SimpleGrid cols={2}>
-      <Stack align='flex-start'>
-        {/* replace hardcoded gopher with gopher.nickname */}
-        <Title order={1}>Gopher: Ryan</Title>
-        {/* need to pass down listId, items, users */}
-        {/* <List listId={listId} items={items} users={users} /> */}
-        {/* update with list information for totals */}
-        <Text weight={500}>List Total: $xxx.xx</Text>
-        <Text weight={500}>Your Total: $xx.xx</Text>
-        <Button onClick={gopherCompleted} size="sm">
-          Gopher Completed!
-        </Button>
-      </Stack>
-
-      <div style={{width: 'auto', height: '455px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <div style={{width: 'auto', height: '455px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <div style={{width: '850px', height: '450px', position: 'relative'}}>
 
         <GoogleMap
@@ -335,13 +311,13 @@ const Map: NextPage = ({ stores }) => {
             backgroundColor: 'white',
             width: '2.5rem',
             height: '2.5rem',
-            // transform: 'translate(49.95rem, -16.3rem)',
+            transform: 'translate(49.95rem, -16.3rem)',
             borderRadius: '2.25px',
             cursor: 'pointer',
             boxShadow: '0px 0px 1.5px 0px grey',
             position: 'absolute',
-            right: '0.65rem',
-            bottom: '7rem'
+            bottom: '8rem',
+            right: '1rem'
           })}
 
           onMouseEnter={handleMouseEnterCurrentLocation}
@@ -364,7 +340,7 @@ const Map: NextPage = ({ stores }) => {
             display: 'flex',
             justifyContent: 'space-around',
             width: '24rem',
-            transform: 'translate(28rem, -34.5rem)',
+            transform: 'translate(28rem, -36.5rem)',
             padding: '11px',
             backgroundColor: 'white',
             borderRadius: '8px'
@@ -387,18 +363,21 @@ const Map: NextPage = ({ stores }) => {
         </Box>
       </div>
     </div>
-    </SimpleGrid>
+
   );
-};
+}
+
 
 export async function getStaticProps() {
-  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=500&type=store&keyword=grocery&key=${google_maps_api_key}`;
+
+
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${center.lat}%2C${center.lng}&radius=500&type=store&keyword=grocery&key=${google_maps_api_key}`
 
   const res = await fetch(url, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
-    },
+      'Content-Type': 'application/json'
+    }
   });
 
   const data = await res.json();
@@ -407,9 +386,10 @@ export async function getStaticProps() {
 
   return {
     props: {
-      stores,
-    },
+      stores
+    }
   };
 }
+
 
 export default Map;

@@ -6,10 +6,9 @@ const Footer: NextPage = () => {
     <Grid
       style={{
         backgroundColor: '#ffb703',
-        position: 'absolute',
-        bottom: 0,
         width: '100%',
         padding: '25px',
+        marginTop: 25
       }}
     >
       <Grid.Col span={3}>

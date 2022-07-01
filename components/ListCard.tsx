@@ -67,13 +67,18 @@ export default function ListCard({ list, users }) {
   };
 
   return (
-    <div style={{ width: 400, margin: 'auto' }}>
+    <div style={{ width: 350, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
         <Title>{list.name}</Title>
+        <Group position="apart" >
+          <Text size="sm" color="gray" style={{ lineHeight: 1.5 }}>
+            {list.location}
+          </Text>
 
-        <Text size="sm" style={{ lineHeight: 1.5 }}>
-          {list.createdAt.split(' ')[0]}
-        </Text>
+          <Text size="sm" color="gray" style={{ lineHeight: 1.5 }}>
+            {list.createdAt.split(' ')[0]}
+          </Text>
+        </Group>
 
         <Text style={{ lineHeight: 1.5 }}>
           {members.map((member) => member.nickname).join(', ')}
