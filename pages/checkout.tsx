@@ -138,6 +138,11 @@ const Map: NextPage = ({ stores }) => {
     setDuration('');
   }
 
+  const updateRadius = async () => {
+    console.log('Radius value')
+    console.log(value);
+  }
+
 
   // Both functions for handling the current location hovering
   const handleMouseEnterCurrentLocation = () => {
@@ -311,22 +316,39 @@ const Map: NextPage = ({ stores }) => {
           </Box>
 
           {/* This is where I will add a slider */}
-          <Slider
-            value={value * 10}
-            onChange={(value) => setValue(value/10)}
-            label={(value) => `${value / 10}`}
-            style={{
-              width: '18rem',
-              transform: 'translate(3.75rem, -30rem)'
-            }}
-            marks={[
-              { value: 1, label: '1mi' },
-              { value: 25, label: '2.5mi' },
-              { value: 50, label: '5mi' },
-              { value: 75, label: '7.5mi' },
-              { value: 100, label: '10mi' },
-            ]}
-          />
+          <Box>
+            <Slider
+              value={value * 10}
+              onChange={(value) => setValue(value/10)}
+              label={(value) => `${value / 10}`}
+              style={{
+                width: '14rem',
+                // transform: 'translate(3.75rem, -30rem)'
+                position: 'absolute',
+                bottom: '23rem',
+                left: '2rem'
+              }}
+              marks={[
+                { value: 1, label: '1mi' },
+                { value: 25, label: '2.5mi' },
+                { value: 50, label: '5mi' },
+                { value: 75, label: '7.5mi' },
+                { value: 100, label: '10mi' },
+              ]}
+            />
+            <Button
+              size='xs'
+              compact
+              style ={{
+                position: 'absolute',
+                bottom: '22.5rem',
+                left: '18rem'
+              }}
+              onClick={updateRadius}
+            >
+              Update Radius
+            </Button>
+          </Box>
         </Box>
 
 
@@ -364,10 +386,13 @@ const Map: NextPage = ({ stores }) => {
             display: 'flex',
             justifyContent: 'space-around',
             width: '24rem',
-            transform: 'translate(28rem, -34.5rem)',
+            // transform: 'translate(28rem, -34.5rem)',
             padding: '11px',
             backgroundColor: 'white',
-            borderRadius: '8px'
+            borderRadius: '8px',
+            position: 'absolute',
+            top: '0.75rem',
+            right: '1rem'
           }}
         >
           <TextInput

@@ -292,7 +292,7 @@ const Map: NextPage = ({ stores }) => {
             onChange={(value) => setValue(value/10)}
             label={(value) => `${value / 10}`}
             style={{
-              width: '18rem',
+              width: '14rem',
               transform: 'translate(3.75rem, -30rem)'
             }}
             marks={[
