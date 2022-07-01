@@ -176,7 +176,7 @@ const Map: NextPage = ({ stores }) => {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <Marker
+          <MarkerF
             position={currentLocation}
             icon={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
             onClick={() => {
@@ -190,7 +190,7 @@ const Map: NextPage = ({ stores }) => {
                   <span>Current Location</span>
                 </InfoWindowF>
               }
-          </Marker>
+          </MarkerF>
           {/* {stores.map((store, index) => ( */}
           {newStores.map((store, index) => (
             <MarkerF
@@ -292,7 +292,7 @@ const Map: NextPage = ({ stores }) => {
             onChange={(value) => setValue(value/10)}
             label={(value) => `${value / 10}`}
             style={{
-              width: '12rem',
+              width: '18rem',
               transform: 'translate(3.75rem, -30rem)'
             }}
             marks={[
@@ -311,7 +311,7 @@ const Map: NextPage = ({ stores }) => {
             backgroundColor: 'white',
             width: '2.5rem',
             height: '2.5rem',
-            transform: 'translate(49.95rem, -13rem)',
+            transform: 'translate(49.95rem, -16.3rem)',
             borderRadius: '2.25px',
             cursor: 'pointer',
             boxShadow: '0px 0px 1.5px 0px grey'
@@ -332,7 +332,17 @@ const Map: NextPage = ({ stores }) => {
         </Box>
 
         {/* This is the temp box for understanding how the geocode api and places will work*/}
-        <Box>
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            width: '24rem',
+            transform: 'translate(28rem, -36.5rem)',
+            padding: '11px',
+            backgroundColor: 'white',
+            borderRadius: '8px'
+          }}
+        >
           <TextInput
             placeholder="Address,ex '1234 Santa Claus Ln, Santa Barbara, CA, 98361"
             style={
@@ -345,11 +355,9 @@ const Map: NextPage = ({ stores }) => {
           <Button
             onClick={handleCurrentLocationSubmit}
           >
-            Submit
-          </Button>
+          Submit
+        </Button>
         </Box>
-
-
       </div>
     </div>
 
