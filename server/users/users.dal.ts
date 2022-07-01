@@ -1,10 +1,14 @@
 import sql from '@/db/index';
-import type { User } from '@/types/index';
+import type { PreDbUser, User } from '@/types/index';
 
-export function addUser (user: Omit<User, 'id'>) {
+export function getUsers() {
+  return sql<User[]>`
+    SELECT * FROM users;
+  `;
+}
+
+export function addUser(user: PreDbUser | Omit<PreDbUser, 'picture'>) {
   return sql`
-    INSERT INTO users ${
-      sql(user, 'email', 'nickname', 'picture')
-    }
+    INSERT INTO users ${sql(user)}
   `;
 }

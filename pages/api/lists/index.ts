@@ -1,19 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { List, User } from '@/types/index';
-import {
-  addShoppingList,
-  modifyShoppingList,
-  deleteShoppingList,
-} from '@/server/lists/index';
+import type { PreDbList, List, User } from '@/types/index';
+import { addList, modifyList, deleteList } from '@/server/lists/index';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { list, users } = <{ list: { name: string }; users: User[] }>req.body;
+    const { list, users } = <{ list: PreDbList; users: User[] }>req.body;
     try {
-      await addShoppingList(list, users);
+      await addList(list, users);
       res.status(201).send(undefined);
     } catch (error) {
       console.log(error);
@@ -22,7 +18,7 @@ export default async function handler(
   } else if (req.method === 'PUT') {
     const list = <List>req.body;
     try {
-      await modifyShoppingList(list);
+      await modifyList(list);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);
@@ -31,7 +27,7 @@ export default async function handler(
   } else if (req.method === 'DELETE') {
     const { listId } = <{ listId: number }>req.body;
     try {
-      await deleteShoppingList(listId);
+      await deleteList(listId);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);

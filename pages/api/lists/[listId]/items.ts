@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type {
-  AddListItemEvent,
-  DeleteListItemEvent,
-  ModifyListItemEvent,
+  PreDbAddListItemEvent,
+  PreDbDeleteListItemEvent,
+  PreDbModifyListItemEvent,
 } from '@/types/index';
 import {
-  addShoppingListItem,
-  modifyShoppingListItem,
-  deleteShoppingListItem,
+  addListItem,
+  modifyListItem,
+  deleteListItem,
 } from '@/server/lists/index';
 
 export default async function handler(
@@ -15,27 +15,27 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const event = <AddListItemEvent>req.body;
+    const event = <PreDbAddListItemEvent>req.body;
     try {
-      await addShoppingListItem(event);
+      await addListItem(event);
       res.status(201).send(undefined);
     } catch (error) {
       console.log(error);
       res.status(500).send(undefined);
     }
   } else if (req.method === 'PUT') {
-    const event = <ModifyListItemEvent>req.body;
+    const event = <PreDbModifyListItemEvent>req.body;
     try {
-      await modifyShoppingListItem(event);
+      await modifyListItem(event);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);
       res.status(500).send(undefined);
     }
   } else if (req.method === 'DELETE') {
-    const event = <DeleteListItemEvent>req.body;
+    const event = <PreDbDeleteListItemEvent>req.body;
     try {
-      await deleteShoppingListItem(event);
+      await deleteListItem(event);
       res.status(204).send(undefined);
     } catch (error) {
       console.log(error);
