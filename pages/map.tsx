@@ -15,7 +15,6 @@ import {
 import { Button, TextInput, Box, Text } from '@mantine/core';
 import { Location } from "tabler-icons-react";
 
-import { PlacesFetcher } from './api/map';
 
 const containerStyle = {
   width: '100%',
@@ -46,10 +45,17 @@ const Map: NextPage = ({ stores }) => {
 
   const [origin, setOrigin] = useState(null);
 
+
   // For the directions
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
+
+
+  // For the geocode and places API for location
+  const [currentLocation, setCurrentLocation] = useState(center);
+  // this will be for the input box
+  const [currentLocationInput, setCurrentLocationInput] = useState('');
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: google_maps_api_key,
@@ -68,31 +74,43 @@ const Map: NextPage = ({ stores }) => {
     setSearchValue(e.target.value);
   }
 
+  // For geocode API and places to get current input
+  const handleCurrentLocationInput = (e) => {
+    setCurrentLocationInput(e.target.value);
+  }
+
+  // This will need to reference an api to get the geocode using fetch and the url
+  const handleCurrentLocationSubmit = async (e) => {
+    // console.log(currentLocationInput)
+    await fetch('/api/current_location?' + new URLSearchParams({address: currentLocationInput}).toString())
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setCurrentLocation(data);
+      })
+      // This is to research the area but using the new location
+      .then(() => searchSubmitClick())
+  }
+
   // IGNORE FOR NOW
-  const searchSubmitClick = async (e) => {
+  const searchSubmitClick = async () => {
     // going to rerun the fetch for this new value. I think we'll
     // keep the default zoom and stuff for now
-    console.log(searchValue)
+    // console.log(searchValue)
 
-    let params = {searchValue: searchValue, ...center}
+    let params = {searchValue: searchValue, ...currentLocation}
     console.log('PARAMS')
     console.log(params)
 
-    if (searchValue.length > 0) {
-      fetch('/api/map?' + new URLSearchParams(params).toString())
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data)
-          // This is where we would reset the value of newStores
-          setNewStores(data.stores);
-        })
-
-      // console.log(stores);
-      // await setNewStores(stores);
-    }
-
-
+    await fetch('/api/map?' + new URLSearchParams(params).toString())
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        // This is where we would reset the value of newStores
+        setNewStores(data.stores);
+      })
   }
+
   // IGNORE FOR NOW
   const autoCompleted = (val) => {
     console.log(val)
@@ -149,11 +167,11 @@ const Map: NextPage = ({ stores }) => {
 
   return (
     <div style={{width: 'auto', height: '455px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <div style={{width: '700px', height: '400px'}}>
+      <div style={{width: '850px', height: '450px'}}>
 
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={center}
+          center={currentLocation}
           zoom={15}
           options={{
             zoomControl: true,
@@ -164,7 +182,7 @@ const Map: NextPage = ({ stores }) => {
           onLoad={(map) => setMap(map)}
         >
           <Marker
-            position={center}
+            position={currentLocation}
             icon={'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
             onClick={() => {
               setSelectedMarker('current location');
@@ -246,7 +264,7 @@ const Map: NextPage = ({ stores }) => {
             display: 'flex',
             justifyContent: 'space-around',
             width: '24rem',
-            transform: 'translate(1rem, -24rem)',
+            transform: 'translate(1rem, -27.5rem)',
             padding: '11px',
             backgroundColor: 'white',
             borderRadius: '8px'
@@ -276,7 +294,7 @@ const Map: NextPage = ({ stores }) => {
             backgroundColor: 'white',
             width: '2.5rem',
             height: '2.5rem',
-            transform: 'translate(40.62rem, -13rem)',
+            transform: 'translate(49.95rem, -13rem)',
             borderRadius: '2.25px',
             cursor: 'pointer',
             boxShadow: '0px 0px 1.5px 0px grey'
@@ -284,7 +302,7 @@ const Map: NextPage = ({ stores }) => {
 
           onMouseEnter={handleMouseEnterCurrentLocation}
           onMouseLeave={handleMouseLeaveCurrentLocation}
-          onClick={() => map.panTo(center)}
+          onClick={() => map.panTo(currentLocation)}
         >
         <Location
             size={28}
@@ -294,6 +312,24 @@ const Map: NextPage = ({ stores }) => {
               color: isCurrentLocationHovering ? '#0F0F0F' : '#545454'
             }}
           />
+        </Box>
+
+        {/* This is the temp box for understanding how the geocode api and places will work*/}
+        <Box>
+          <TextInput
+            placeholder="Address,ex '1234 Santa Claus Ln, Santa Barbara, CA, 98361"
+            style={
+              {
+                width: '250px',
+              }
+            }
+            onChange={handleCurrentLocationInput}
+          />
+          <Button
+            onClick={handleCurrentLocationSubmit}
+          >
+            Submit
+          </Button>
         </Box>
 
 
