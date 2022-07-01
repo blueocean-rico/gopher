@@ -29,6 +29,7 @@ const ListPage: NextPage<Props> = () => {
     data.members = [];
   }
   const { items, members, events, users, listId, list } = data;
+  console.log(list);
   console.log('items', items, 'members', members, 'events', events);
   return (
     <Stack>
