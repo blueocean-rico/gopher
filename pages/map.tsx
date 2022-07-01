@@ -81,34 +81,22 @@ const Map: NextPage = ({ stores }) => {
 
   // This will need to reference an api to get the geocode using fetch and the url
   const handleCurrentLocationSubmit = async (e) => {
-    // console.log(currentLocationInput)
-    await fetch('/api/current_location?' + new URLSearchParams({address: currentLocationInput}).toString())
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setCurrentLocation(data);
-      })
-      // This is to research the area but using the new location
-      .then(() => searchSubmitClick())
+      const res = await fetch('/api/current_location?' + new URLSearchParams({address: currentLocationInput}).toString());
+      const data = await res.json();
+      await setCurrentLocation(data);
   }
 
   // IGNORE FOR NOW
   const searchSubmitClick = async () => {
     // going to rerun the fetch for this new value. I think we'll
     // keep the default zoom and stuff for now
-    // console.log(searchValue)
-
     let params = {searchValue: searchValue, ...currentLocation}
-    console.log('PARAMS')
-    console.log(params)
-
-    await fetch('/api/map?' + new URLSearchParams(params).toString())
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        // This is where we would reset the value of newStores
-        setNewStores(data.stores);
-      })
+    // console.log('PARAMS')
+    // console.log(params)
+    const new_places = await fetch('/api/map?' + new URLSearchParams(params).toString());
+    const new_places_data = await new_places.json();
+    console.log(new_places_data);
+    await setNewStores(new_places_data.stores)
   }
 
   // IGNORE FOR NOW
@@ -129,7 +117,7 @@ const Map: NextPage = ({ stores }) => {
     // THIS IS WHERE I WANT TO DO THE ROUTING
     const directionsService = new google.maps.DirectionsService()
     const results = await directionsService.route({
-      origin: center,
+      origin: currentLocation,
       destination: newStores[selectedMarker].geometry.location,
       travelMode: google.maps.TravelMode.DRIVING
     })
@@ -155,6 +143,10 @@ const Map: NextPage = ({ stores }) => {
   const handleMouseLeaveCurrentLocation = () => {
     setIsCurrentLocationHovering(false);
   }
+
+  useEffect(() => {
+    searchSubmitClick();
+  }, [currentLocation])
 
 
 
