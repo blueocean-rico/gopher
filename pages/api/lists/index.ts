@@ -16,7 +16,7 @@ export default async function handler(
       res.status(500).send(undefined);
     }
   } else if (req.method === 'PUT') {
-    const list = <List>req.body;
+    const { list } = <{ list: List }>req.body;
     try {
       await modifyList(list);
       res.status(204).send(undefined);
