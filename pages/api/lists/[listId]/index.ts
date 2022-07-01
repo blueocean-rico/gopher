@@ -14,13 +14,14 @@ export default async function handler(
   if (req.method === 'GET') {
     try {
       const listId = Number(req.query.listId);
-      const [list, users, items, members, events] = await Promise.all([
+      const [listArray, users, items, members, events] = await Promise.all([
         getLists(listId),
         getUsers(),
         getListItems(listId),
         getListMembers(listId),
         getListItemEvents([listId]),
       ]);
+      const list = listArray[0];
       res.status(200).send({ listId, list, items, members, events, users });
     } catch (err) {
       console.log(err);
