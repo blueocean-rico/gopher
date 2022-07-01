@@ -3,7 +3,13 @@ import { Paper, ScrollArea, Button } from '@mantine/core';
 import { Notification } from '@/components/index';
 import type { List, ListItemEvent } from '../types';
 
-export function Notifications(events: ListItemEvent[], lists: List[]) {
+export function Notifications({
+  events,
+  lists,
+}: {
+  events: ListItemEvent[];
+  lists: List[];
+}) {
   const [displayCount, setDisplayCount] = useState(10);
 
   return (

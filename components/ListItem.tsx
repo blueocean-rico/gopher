@@ -1,30 +1,56 @@
-import { Box, Text, Paper, Group, Button } from '@mantine/core';
+import {
+  Stack,
+  CloseButton,
+  Box,
+  Text,
+  Paper,
+  Group,
+  ActionIcon,
+} from '@mantine/core';
 import { Pencil } from 'tabler-icons-react';
+import { Avatar } from '@/components/index';
+import type { ListItem } from '@/types/index';
 
-export function ListItem({ item, editable, small }) {
+export function ListItem({ item, small }: { item: ListItem; small: true });
+export function ListItem({
+  item,
+  editable,
+}: {
+  item: ListItem;
+  editable: boolean;
+});
+export function ListItem({
+  item,
+  editable,
+  small,
+}: {
+  item: ListItem;
+  editable?: boolean;
+  small?: boolean;
+}) {
   const handleDelete = () => {
-    console.log(item);
-    fetch('api/lists/0/items', {
+    fetch(`api/lists/${item.listId}/items`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // TODO change them if there is dynamic available
-        // The id of the item
-        start: { id: item.id },
-        // The id of the user that made it
+        listId: item.listId,
+        // TODO: deal with logged in user
         createdBy: { id: 6 },
-        // The id of the list
-        listId: 1,
+        eventType: 'delete',
+        start: item,
+        end: null,
       }),
     });
   };
+
   const handleEdit = (event) => {
     //TODO make work with the listItemEdit
   };
 
   if (small) {
+    console.log(item);
     return (
       <Text>
         Avatar {item.name}, ${item.price}
@@ -33,18 +59,25 @@ export function ListItem({ item, editable, small }) {
   } else if (editable) {
     return (
       <Paper shadow="xs" p="xs" withBorder>
-        <Group position="apart">
-          <Box>Render Avatar here once it is done</Box>
-          <Box>{item.name}</Box>
-          <Box>${item.price}</Box>
-          <Box>{item.members.join(', ')}</Box>
-          <Button variant="subtle" color="dark" onClick={handleDelete}>
-            X
-          </Button>
-          <Button variant="subtle" color="dark" onClick={handleEdit}>
-            <Pencil />
-          </Button>
-        </Group>
+        <Stack>
+          <Group position="apart">
+            <Box>{item.name}</Box>
+            <ActionIcon variant="hover" onClick={handleEdit}>
+              <Pencil />
+            </ActionIcon>
+            <CloseButton variant="hover" onClick={handleDelete} />
+          </Group>
+          <Group>
+            <Box>${item.price}</Box>
+            {/*TODO: your price*/}
+            <Box>${item.price}</Box>
+            <Group>
+              {item.users.map((user) => (
+                <Avatar key={user.id} user={user} size="sm" />
+              ))}
+            </Group>
+          </Group>
+        </Stack>
       </Paper>
     );
   }

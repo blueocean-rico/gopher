@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { Box, Paper, Stack, Title, Button, MultiSelect } from '@mantine/core';
+import {
+  Group,
+  CloseButton,
+  Box,
+  Paper,
+  Stack,
+  Title,
+  Button,
+  MultiSelect,
+} from '@mantine/core';
 import { User } from '@/components/index';
 import type { Member, User as UserType } from '@/types/index';
-import { X } from 'tabler-icons-react';
 import Image from 'next/image';
 
 export function ListMembers({
@@ -14,11 +22,11 @@ export function ListMembers({
   users: UserType[];
   members: Member[];
 }) {
-  const [addMember, setAddMember] = useState(false);
+  const [addMemberVisible, setAddMemberVisible] = useState(false);
   const [addMembers, setAddMembers] = useState([]);
 
   const handleDeleteMember = async (member) => {
-    const rawResponse = await fetch(`/lists/${listId}/members`, {
+    await fetch(`/lists/${listId}/members`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
@@ -28,15 +36,15 @@ export function ListMembers({
     });
   };
 
-  const handleRandomGoperClick = async () => {
-    const ranGopherIndex = Math.floor(Math.random() * members.length);
-    const rawResponse = await fetch(`/api/lists/${listId}/members`, {
+  const handleRandomGopherClick = async () => {
+    const randomGopherIndex = Math.floor(Math.random() * members.length);
+    await fetch(`/api/lists/${listId}/members`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ listId, user: members[ranGopherIndex] }),
+      body: JSON.stringify({ listId, user: members[randomGopherIndex] }),
     });
   };
 
@@ -53,7 +61,7 @@ export function ListMembers({
   };
 
   const handleAddMemberClick = () => {
-    setAddMember(true);
+    setAddMemberVisible(true);
   };
 
   const handleConfirm = async () => {
@@ -61,7 +69,7 @@ export function ListMembers({
       const newMembers = users.filter((user) =>
         addMembers.includes(user.nickname)
       );
-      const rawResponse = await fetch(`/api/lists/${listId}/members`, {
+      await fetch(`/api/lists/${listId}/members`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -71,15 +79,14 @@ export function ListMembers({
       });
     }
     setAddMembers([]);
-    setAddMember(false);
+    setAddMemberVisible(false);
   };
 
   return (
     <Paper>
-      <Title order={2}>Members</Title>
       <Stack>
         {members.map((member) => (
-          <Box key={member.id}>
+          <Group key={member.id}>
             {member.gopher && (
               <Image
                 src="/gopherIcon.png"
@@ -89,21 +96,19 @@ export function ListMembers({
               />
             )}
             <User user={member} />
-            <Button
+            <CloseButton
               onClick={() => {
                 handleDeleteMember(member);
               }}
               variant="default"
-            >
-              <X />
-            </Button>
-          </Box>
+            />
+          </Group>
         ))}
         <Button onClick={handleAddMemberClick} variant="default">
           Add User
         </Button>
-        {addMember && (
-          <Stack>
+        {addMemberVisible && (
+          <>
             <MultiSelect
               label="Add Users:"
               placeholder="Select all that apply"
@@ -119,9 +124,9 @@ export function ListMembers({
             <Button onClick={handleConfirm} variant="default">
               Confirm
             </Button>
-          </Stack>
+          </>
         )}
-        <Button onClick={handleRandomGoperClick} variant="default">
+        <Button onClick={handleRandomGopherClick} variant="default">
           Randomize Gopher
         </Button>
         <Button onClick={handleClaimGopher} variant="default">

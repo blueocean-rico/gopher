@@ -8,7 +8,7 @@ import {
 import { ReactNode, useState } from 'react';
 import { Check, Plus } from 'tabler-icons-react';
 
-export function ListItemEdit({ users, item = undefined, listId = 1 }) {
+export function ListItemEdit({ users, item = undefined, listId }) {
   const [price, setPrice] = useState('');
   const [name, setName] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
@@ -23,7 +23,7 @@ export function ListItemEdit({ users, item = undefined, listId = 1 }) {
       }
     });
     if (newItem) {
-      fetch('/api/lists/1/items', {
+      fetch(`/api/lists/${listId}/items`, {
         method: 'POST',
         body: JSON.stringify({
           end: { id: 1, listId, name, price: +price, users: userList },
@@ -38,7 +38,7 @@ export function ListItemEdit({ users, item = undefined, listId = 1 }) {
         },
       });
     } else {
-      fetch('/api/lists/1/items', {
+      fetch(`/api/lists/1/items`, {
         method: 'PUT',
         body: JSON.stringify({
           start: {
@@ -63,9 +63,9 @@ export function ListItemEdit({ users, item = undefined, listId = 1 }) {
 
   let confirm: ReactNode;
   if (item) {
-    confirm = <Plus size={16} onClick={() => handleAdd(false)} />;
+    confirm = <Check size={16} onClick={() => handleAdd(false)} />;
   } else {
-    confirm = <Check onClick={() => handleAdd(true)} />;
+    confirm = <Plus onClick={() => handleAdd(true)} />;
   }
 
   return (
