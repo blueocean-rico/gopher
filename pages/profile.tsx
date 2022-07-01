@@ -20,7 +20,7 @@ const UserProfile: NextPage = () => {
     <div>
       <Title>Hello {user?.given_name}</Title>
       <Grid>
-        <Grid.Col span={1}>
+        <Grid.Col>
           <Image
             src={user?.picture}
             width={50}
@@ -30,9 +30,10 @@ const UserProfile: NextPage = () => {
             withPlaceholder
           />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col>
           <Text>Name: {user.name}</Text>
           <Text>Email: {user.email}</Text>
+          <Text>Nickname: {user.nickname}</Text>
           <Button>edit details</Button>
         </Grid.Col>
       </Grid>
