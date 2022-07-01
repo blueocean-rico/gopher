@@ -162,7 +162,7 @@ const Map: NextPage = ({ stores }) => {
 
   return (
     <div style={{width: 'auto', height: '455px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <div style={{width: '850px', height: '450px'}}>
+      <div style={{width: '850px', height: '450px', position: 'relative'}}>
 
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -314,7 +314,10 @@ const Map: NextPage = ({ stores }) => {
             transform: 'translate(49.95rem, -16.3rem)',
             borderRadius: '2.25px',
             cursor: 'pointer',
-            boxShadow: '0px 0px 1.5px 0px grey'
+            boxShadow: '0px 0px 1.5px 0px grey',
+            position: 'absolute',
+            bottom: '8rem',
+            right: '1rem'
           })}
 
           onMouseEnter={handleMouseEnterCurrentLocation}
