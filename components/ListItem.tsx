@@ -9,16 +9,33 @@ import {
 } from '@mantine/core';
 import { Pencil } from 'tabler-icons-react';
 import { Avatar } from '@/components/index';
+import type { ListItem } from '@/types/index';
 
-export function ListItem({ listId, item, editable, small }) {
+export function ListItem({ item, small }: { item: ListItem; small: true });
+export function ListItem({
+  item,
+  editable,
+}: {
+  item: ListItem;
+  editable: boolean;
+});
+export function ListItem({
+  item,
+  editable,
+  small,
+}: {
+  item: ListItem;
+  editable?: boolean;
+  small?: boolean;
+}) {
   const handleDelete = () => {
-    fetch(`api/lists/${listId}/items`, {
+    fetch(`api/lists/${item.listId}/items`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        listId,
+        listId: item.listId,
         // TODO: deal with logged in user
         createdBy: { id: 6 },
         eventType: 'delete',
@@ -33,6 +50,7 @@ export function ListItem({ listId, item, editable, small }) {
   };
 
   if (small) {
+    console.log(item);
     return (
       <Text>
         Avatar {item.name}, ${item.price}
