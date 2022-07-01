@@ -32,14 +32,6 @@ const ListsPage: NextPage<Props> = () => {
       <Button onClick={() => setOpened(true)} style={{margin: 25}}>
         create new list
       </Button>
-      </ Group>
-      <Group>
-      <SimpleGrid cols={2}>
-          {lists.map((list) => (
-            // <ListCard { list.name, list.createdAt, users}/>
-            <ListCard list={list} users={users} key={list.id} />
-          ))}
-    </SimpleGrid>
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
@@ -47,6 +39,14 @@ const ListsPage: NextPage<Props> = () => {
       >
         <NewListForm users={users}/>
       </Modal>
+      </ Group>
+      <Group>
+        <SimpleGrid cols={2}>
+          {lists.map((list) => (
+            // <ListCard { list.name, list.createdAt, users}/>
+            <ListCard list={list} users={users} key={list.id} />
+          ))}
+        </SimpleGrid>
         <Stack>
           <Title order={2}>Notifications</Title>
           <Notifications events={events} lists={lists} />

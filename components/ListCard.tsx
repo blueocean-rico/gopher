@@ -49,7 +49,7 @@ export default function ListCard({ list, users }) {
   };
 
   return (
-    <div style={{ width: 400, margin: 'auto' }}>
+    <div style={{ width: 350, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
         <Title>
           {list.name}
