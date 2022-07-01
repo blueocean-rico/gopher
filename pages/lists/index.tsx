@@ -1,12 +1,13 @@
 import type { NextPage } from 'next';
 import { Title, Stack, Group, Box, Button, Modal, SimpleGrid } from '@mantine/core';
-import type { GetServerSideProps } from 'next';
+
 import type { List, User, ListItemEvent } from '@/types/index';
 import { NewListForm, Notifications  } from '@/components/index';
-import { getLists, getListItemEvents } from '@/server/lists/index';
-import { getUsers } from '@/server/users/index';
+// import { getLists, getListItemEvents } from '@/server/lists/index';
+// import { getUsers } from '@/server/users/index';
 import ListCard from '@/components/ListCard';
 import { useState } from 'react';
+import useSWR from 'swr'
 
 interface Props {
   lists: List[];
@@ -14,8 +15,15 @@ interface Props {
   events: ListItemEvent[];
 }
 
-const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
+const ListsPage: NextPage<Props> = () => {
   const [opened, setOpened] = useState(false);
+  const fetcher = url => fetch(url).then(r => r.json())
+  const {data, error} = useSWR('/api/lists', fetcher, { refreshInterval: 1000 })
+  if(!data) {
+    return <div></div>
+  }
+  const {lists, users, events} = data
+  console.log('HERE', data)
   console.log('lists', lists, 'users', users, 'events', events);
   return (
     <Stack>
@@ -50,11 +58,12 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
 
 export default ListsPage;
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const lists = await getLists();
-  const users = await getUsers();
-  const listIds = lists.map((list) => list.id);
-  const events = await getListItemEvents(listIds);
+// Now using the refreshing data, left this here incase we want to switch back ever
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const lists = await getLists();
+//   const users = await getUsers();
+//   const listIds = lists.map((list) => list.id);
+//   const events = await getListItemEvents(listIds);
 
-  return { props: { lists, users, events } };
-};
+//   return { props: { lists, users, events } };
+// };

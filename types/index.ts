@@ -1,7 +1,8 @@
 export interface List {
   id: number;
   name: string;
-  createdAt: Date;
+  location: string;
+  createdAt: string;
 }
 
 export type PreDbList = Omit<List, 'id' | 'createdAt'>;
