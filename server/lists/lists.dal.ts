@@ -1,7 +1,7 @@
 import sql from '@/db/index';
 import type { PreDbList, List, User } from '@/types/index';
 
-export async function getLists(userId?: number) {
+export async function getLists() {
   const lists = await sql<List[]>`
     SELECT * FROM lists;
   `;
