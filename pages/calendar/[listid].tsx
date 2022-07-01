@@ -47,15 +47,14 @@ const CalendarPage: NextPage = () => {
       </Modal>
 
       <Title order={2} align="center">
-        List name, {router.query.name}
+        {router.query.name}
       </Title>
       <Title order={4} align="center">
-        People on the list
       </Title>
       <Calendar
         renderDay={(date) => (
           // We could use SSR to get a obj with (day): [people] then display that for whatever day you hover
-          <Tooltip style={{ width: "100%" }} label="Name, Name are free" withArrow>
+          <Tooltip style={{ width: "100%" }} label="No one is free" withArrow>
             <Text style={{ width: "100%" }}>{date.getDate()}</Text>
           </Tooltip>
         )}

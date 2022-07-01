@@ -36,7 +36,7 @@ const Navbar: NextPage = () => {
             <Menu.Item component={NextLink} href="/lists">
               Lists
             </Menu.Item>
-            <Menu.Item component={NextLink} href='/calendar/test?name=test'>
+            <Menu.Item component={NextLink} href='/calendar/test?name=Calendar'>
               Calendar
             </Menu.Item>
             <Menu.Item component={NextLink} href='/api/auth/logout'>
