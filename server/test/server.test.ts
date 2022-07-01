@@ -80,27 +80,29 @@ describe('server', () => {
 
   describe('lists', () => {
     it('should add a shopping list', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       const results = await sql`SELECT * FROM lists`;
       expect(results).toHaveLength(1);
 
-      const { name } = results[0];
+      const { name, location } = results[0];
       expect(name).toEqual(list.name);
+      expect(location).toEqual(list.location);
     });
 
     it('should get the shopping lists', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       const results = await getLists();
       expect(results).toHaveLength(1);
       expect(results[0].name).toEqual(list.name);
+      expect(results[0].location).toEqual(list.location);
     });
 
     it('should delete a shopping list', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
       let results = await sql`SELECT * FROM lists`;
       const listId = results[0].id;
@@ -112,7 +114,7 @@ describe('server', () => {
     });
 
     it('should modify a shopping list', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
       let results = await getLists();
 
@@ -128,7 +130,7 @@ describe('server', () => {
 
   describe('listmembers', () => {
     it('should add a shopping list member', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       const listResults = await getLists();
@@ -157,7 +159,7 @@ describe('server', () => {
     });
 
     it('should get shopping list members', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql`SELECT * FROM lists`;
@@ -189,7 +191,7 @@ describe('server', () => {
     });
 
     it('should delete a shopping list member', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql`SELECT * FROM lists`;
@@ -224,7 +226,7 @@ describe('server', () => {
 
   describe('listitems', () => {
     it('should add a shopping list item', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
@@ -269,7 +271,7 @@ describe('server', () => {
     });
 
     it('should get shopping list items', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
@@ -309,7 +311,7 @@ describe('server', () => {
     });
 
     it('should delete a shopping list item', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
@@ -356,7 +358,7 @@ describe('server', () => {
     });
 
     it('should modify a shopping list item', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
@@ -408,7 +410,7 @@ describe('server', () => {
 
   describe('listevents', () => {
     it('should get a shopping list events', async () => {
-      const list = { name: 'testlist' };
+      const list = { name: 'testlist', location: '123 Main St.' };
       await addList(list, []);
 
       let results = await sql<Types.List[]>`SELECT * FROM lists`;
