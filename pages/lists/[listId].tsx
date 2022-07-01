@@ -1,16 +1,10 @@
 import { Button, Title, Group, Stack, ActionIcon } from '@mantine/core';
 import { Clock } from 'tabler-icons-react';
 import type { NextPage } from 'next';
-import type { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import type { ListItem, Member, User, ListItemEvent } from '@/types/index';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import { List, ListItemEdit, ListMembers } from '@/components/index';
-import { getUsers } from '@/server/users/index';
-import {
-  getListItems,
-  getListMembers,
-  getListItemEvents,
-} from '@/server/lists/index';
 import useSWR from 'swr';
 
 interface Props {
@@ -22,23 +16,27 @@ interface Props {
 }
 
 const ListPage: NextPage<Props> = () => {
-  const router = useRouter()
-  const fetcher = url => fetch(url).then(r => r.json())
-  const {data, error} = useSWR(`/api/lists/${router.query.listId}`, fetcher, { refreshInterval: 1000 })
-  if(!data) {
-    return <div></div>
+  const router = useRouter();
+  const fetcher = (url) => fetch(url).then((r) => r.json());
+  const { data, error } = useSWR(`/api/lists/${router.query.listId}`, fetcher, {
+    refreshInterval: 10,
+  });
+  if (!data) {
+    return <div></div>;
   }
-  if(!data.items) {
-    data.items = []
-    data.members = []
+  if (!data.items) {
+    data.items = [];
+    data.members = [];
   }
-  const {items, members, events, users, listId} = data
+  const { items, members, events, users, listId, list } = data;
   console.log('items', items, 'members', members, 'events', events);
   return (
     <Stack>
-      {/*TODO: set up fetching of actual list from db by listId (need to change lists.dal?)*/}
       <Group align="baseline" spacing="lg">
-        <Title order={1}>List Name</Title> <ActionIcon size={24}><Clock /></ActionIcon>
+        <Title order={1}>{list.name}</Title>{' '}
+        <ActionIcon size={24}>
+          <Clock />
+        </ActionIcon>
       </Group>
       <Group align="stretch" spacing="xl">
         <Stack justify="flex-start">
@@ -47,8 +45,10 @@ const ListPage: NextPage<Props> = () => {
         </Stack>
         <Stack justify="flex-start">
           <ListMembers listId={listId} members={members} users={users} />
-          {/*TODO: link to checkout page*/}
-          <Button>Checkout</Button>
+          {/*<Link href={`lists/${list.id}/checkoout`} passHref>*/}
+          <Link href={`lists/checkout`} passHref>
+            <Button color="blue">Checkout</Button>
+          </Link>
         </Stack>
       </Group>
     </Stack>
@@ -56,15 +56,3 @@ const ListPage: NextPage<Props> = () => {
 };
 
 export default ListPage;
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const listId = Number(context.query.listId);
-//   const [users, items, members, events] = await Promise.all([
-//     getUsers(),
-//     getListItems(listId),
-//     getListMembers(listId),
-//     getListItemEvents([listId]),
-//   ]);
-
-//   return { props: { listId, items, members, events, users } };
-// };
