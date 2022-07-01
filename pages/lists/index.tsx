@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { Title, Stack, Group, Box, Button, Modal } from '@mantine/core';
 import type { GetServerSideProps } from 'next';
 import type { List, User, ListItemEvent } from '@/types/index';
-import { NewListForm } from '@/components/index';
+import { NewListForm, Notifications  } from '@/components/index';
 import { getLists, getListItemEvents } from '@/server/lists/index';
 import { getUsers } from '@/server/users/index';
 import ListCard from '@/components/ListCard';
@@ -18,12 +18,14 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
   const [opened, setOpened] = useState(false);
   console.log('lists', lists, 'users', users, 'events', events);
   return (
-    <>
+    <Stack>
+      <Title order={1}>Your Lists</Title>
+
       <Box style={{margin: 25}}>
         <Group>
           {lists.map((list) => (
             // <ListCard { list.name, list.createdAt, users}/>
-            <ListCard list={list} users={users} />
+            <ListCard list={list} users={users} key={list.id} />
           ))}
         </Group>
       </Box>
@@ -37,7 +39,13 @@ const ListsPage: NextPage<Props> = ({ lists, users, events }) => {
       <Button onClick={() => setOpened(true)} style={{margin: 25}}>
         create new list
       </Button>
-    </>
+      <Group>
+        <Stack>
+          <Title order={2}>Notifications</Title>
+          <Notifications events={events} lists={lists} />
+        </Stack>
+      </Group>
+    </Stack>
   );
 };
 
