@@ -1,4 +1,4 @@
-import { Box, Card, Stack, Text } from '@mantine/core';
+import { Group, Paper, Stack, Text } from '@mantine/core';
 import type { ListItemEvent, List } from '@/types/index';
 import { ListItem } from '@/components/index';
 import { ArrowRightBar } from 'tabler-icons-react';
@@ -28,27 +28,30 @@ export function Notification({
 
   //TODO change list name to be a link to the list
   return (
-    <Card>
+    <Paper shadow="xs" p="xs" withBorder>
       <Stack>
-        <Box>
+        <Group>
           <Text weight={700}>{event.createdBy.nickname}</Text>{' '}
-          <Text>
+            <Text>
             {verb} an item{' '}
             {list
               ? null
               : connector + ' ' + lists.find((l) => l.id === list.id).name}
           </Text>
-        </Box>
-        <Card>
-          <ListItem item={event.eventType !== 'delete' ? event.start : event.end} editable={false} small={true} />
+        </Group>
+        <Paper>
+          <ListItem
+            item={event.eventType !== 'add' ? event.start : event.end}
+            small={true}
+          />
           {event.eventType === 'modify' && (
             <>
               <ArrowRightBar strokeWidth={1} />
-              <ListItem item={event.end} editable={false} small={true}/>
+              <ListItem item={event.end} small={true} />
             </>
           )}
-        </Card>
+        </Paper>
       </Stack>
-    </Card>
+    </Paper>
   );
 }

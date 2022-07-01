@@ -3,7 +3,7 @@ import { Button, TextInput } from '@mantine/core';
 //import { UserSelect } from '@/components/UserSelect';
 import { addList } from '@/server/lists/index';
 
-export default function NewListForm({ users }) {
+export function NewListForm({ users }) {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [members, setMembers] = useState([]);
