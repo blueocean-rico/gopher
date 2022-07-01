@@ -1,7 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import {UserProvider} from '@auth0/nextjs-auth0';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, AppShell, Group } from '@mantine/core';
 import { Navbar, Footer } from '@/components/index';
 
 export default function App(props: AppProps) {
@@ -23,7 +23,22 @@ export default function App(props: AppProps) {
           colorScheme: 'light',
         }}
       >
-      <div style={{
+      <AppShell
+      padding="md"
+      header={<Navbar />}
+      footer={<Footer />}
+      styles={(theme) => ({
+        main : {
+          padding: '10px 20px',
+        }
+        // main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
+      })}
+      >
+        <Group position="center">
+        <Component {...pageProps} />
+        </Group>
+      </AppShell>
+      {/* <div style={{
         position: "relative",
         minHeight: "100vh"
       }}>
@@ -32,7 +47,7 @@ export default function App(props: AppProps) {
           <Component {...pageProps} />
         </div>
         <Footer />
-      </div>
+      </div> */}
       </MantineProvider>
       </UserProvider>
     </>
